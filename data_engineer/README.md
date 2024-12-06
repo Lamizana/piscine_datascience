@@ -11,8 +11,8 @@
 
 1. [Règles générales.](#règles-générales)
 2. [Introduction.](#introduction)
-3. [Exercice 00: First python script.](#exercice-00)
-4. [Exercice 01: First use of package.](#exercice-01)
+3. [Exercice 00: Create postgres DB.](#exercice-00)
+4. [Exercice 01: Show me your DB.](#exercice-01)
 5. [Exercice 02: First function python.](#exercice-02)
 6. [Exercice 03: NULL not found.](#exercice-03)
 7. [Exercice 04: The Even and the Odd.](#exercice-04)
@@ -92,4 +92,94 @@ Nous devons être en mesure de nous connecter à votre base de données posgress
 $> psql -U your_login -d piscineds -h localhost -W
 mysecretpassword
 piscineds=#
+```
+
+### Notion abordees
+
+Pour pouvoir créer une base de données, il faut que le serveur ***PostgreSQL*** soit lancé.
+
+Pour verifier si postgres est bien installee:
+```bash
+$> psql --version
+psql (PostgreSQL) 16.6 (Ubuntu 16.6-0ubuntu0.24.04.1)
+$>
+```
+
+Pour vérifier si le service PostgreSQL est en cours d'exécution sur notre système :
+
+```bash
+>$ sudo systemctl status postgresql
+● postgresql.service - PostgreSQL RDBMS
+     Loaded: loaded (/usr/lib/systemd/system/postgresql.service; enabled; preset: enabled)
+     Active: active (exited) since Fri 2024-12-06 16:17:33 CET; 15min ago
+   Main PID: 109196 (code=exited, status=0/SUCCESS)
+        CPU: 1ms
+
+Dec 06 16:17:33 alex-Vm systemd[1]: Starting postgresql.service - PostgreSQL RDBMS...
+Dec 06 16:17:33 alex-Vm systemd[1]: Finished postgresql.service - PostgreSQL RDBMS.
+$>
+```
+
+Pour acceder a Postgres :
+```bash
+>$ sudo -i -u postgres
+postgres@alex-Vm:~$ psql
+psql (16.6 (Ubuntu 16.6-0ubuntu0.24.04.1))
+Type "help" for help.
+
+postgres=# 
+```
+
+Creation d'un utilisateur avec tous les droits :
+```bash
+>$ sudo -i -u postgres
+postgres@alex-Vm:~$ psql
+psql (16.6 (Ubuntu 16.6-0ubuntu0.24.04.1))
+Type "help" for help.
+
+postgres=# CREATE ROLE alamizan LOGIN SUPERUSER PASSWORD 'mysecretpassword';
+```
+
+Pour creer une base de donnee :
+```bash
+>$ sudo -i -u postgres
+postgres@alex-Vm:~$ createdb ma_base
+```
+
+Pour sortir de psql, saisir :
+
+```bash
+>$ ma_base=> \q
+```
+
+POur avoir toutes les commandes psql :
+```bash
+>$ ma_base=> \?
+>$ ma_base=> \h
+```
+
+Pour supprimer une db:
+```bash
+postgres@alex-Vm:~$ dropdb ma_db
+```
+
+----------------------------------------------------------------------------
+
+## Exercice 01
+
+### Show me your DB
+
+- Turn-in directory : ***ex01/***
+- Files to turn in : None
+- Allowed functions : pgadmin, Postico, dbeaver or what you want to see the db easily
+
+- Trouver un moyen de visualiser facilement la base de données à l'aide d'un logiciel.
+- Le logiciel choisi doit vous permettre de trouver et de manipuler facilement les données en utilisant leur propre
+ID correspondant
+
+### Notion abordees
+
+Pour installer pgAdmin :
+```bash
+sudo snap install pgadmin4
 ```
