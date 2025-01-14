@@ -3,19 +3,17 @@
 > Created by alex lamizana in 06/12/2024
 ----------------------------------------------------------------------------
 
-## Data Ingineer: Creation d'une DataBase
+## Data engineer: Creation d'une DataBase
 
-## [Index](/README.md)
+### [Index](/README.md)
 
-## Sommaire
+### Sommaire
 
 1. [Règles générales.](#règles-générales)
 2. [Introduction.](#introduction)
 3. [Exercice 00: Create postgres DB.](#exercice-00)
 4. [Exercice 01: Show me your DB.](#exercice-01)
-5. [Exercice 02: First function python.](#exercice-02)
-6. [Exercice 03: NULL not found.](#exercice-03)
-7. [Exercice 04: The Even and the Odd.](#exercice-04)
+5. [Exercice 01: First table.](#exercice-02)
 
 ----------------------------------------------------------------------------
 
@@ -72,13 +70,15 @@ Nous sommes fin février 2022, c'est votre premier jour dans une entreprise de v
 
 ----------------------------------------------------------------------------
 
-## Exercice 00
+## Exercice 00  
 
 ### Create postgres DB
 
-- Turn-in directory : ***ex00/***
-- Files to turn in : None
-- Allowed functions : All
+|                                   |
+| :-------------------------------- |
+| **Turn-in directory** :  *ex00/*  |
+| **Files to turn in**  :  *None*   |
+| **Allowed functions** :  *All*    |
 
 Pour cet exercice, on peut utiliser directement *postgres* s'il est installé sur votre campus ou passer par une VM, sinon utiliser docker compose.
 
@@ -98,7 +98,10 @@ piscineds=#
 
 Pour pouvoir créer une base de données, il faut que le serveur ***PostgreSQL*** soit lancé.
 
+Liste des commandes psql: [commandes_psql](/data_engineer/commands_psql.md)
+
 Pour verifier si postgres est bien installee:
+
 ```bash
 $> psql --version
 psql (PostgreSQL) 16.6 (Ubuntu 16.6-0ubuntu0.24.04.1)
@@ -121,6 +124,7 @@ $>
 ```
 
 Pour acceder a Postgres :
+
 ```bash
 >$ sudo -i -u postgres
 postgres@alex-Vm:~$ psql
@@ -131,6 +135,7 @@ postgres=#
 ```
 
 Creation d'un utilisateur avec tous les droits :
+
 ```bash
 >$ sudo -i -u postgres
 postgres@alex-Vm:~$ psql
@@ -141,26 +146,60 @@ postgres=# CREATE ROLE alamizan LOGIN SUPERUSER PASSWORD 'mysecretpassword';
 ```
 
 Pour creer une base de donnee :
+
 ```bash
 >$ sudo -i -u postgres
 postgres@alex-Vm:~$ createdb ma_base
 ```
 
-Pour sortir de psql, saisir :
+Pour supprimer une db:
 
 ```bash
->$ ma_base=> \q
+postgres@alex-Vm:~$ dropdb ma_db
 ```
 
-POur avoir toutes les commandes psql :
+### Commandes depuis la console psq
+
+Pour avoir toutes les commandes psql :
+
 ```bash
 >$ ma_base=> \?
 >$ ma_base=> \h
 ```
 
-Pour supprimer une db:
+Pour lister les bases de données :
+
 ```bash
-postgres@alex-Vm:~$ dropdb ma_db
+postgres=# \l
+```
+
+Pour se connecter à une base de données :
+
+```bash
+postgres=# \c piscineds
+```
+
+Le prompt change avec le nom de la base de données :
+
+```bash
+piscineds=# 
+```
+
+Pour lister les tables :
+
+```bash
+piscineds=# \dt
+          Liste des relations
+ Schéma |  Nom   | Type  | Propriétaire 
+--------+--------+-------+--------------
+ public | table1 | table | alamizan
+(1 ligne)
+```
+
+Pour sortir de la base de donnees, saisir :
+
+```bash
+>$ piscineds=> \q
 ```
 
 ----------------------------------------------------------------------------
@@ -169,17 +208,48 @@ postgres@alex-Vm:~$ dropdb ma_db
 
 ### Show me your DB
 
-- Turn-in directory : ***ex01/***
-- Files to turn in : None
-- Allowed functions : pgadmin, Postico, dbeaver or what you want to see the db easily
+|                                   |
+| :-------------------------------- |
+| **Turn-in directory** :  *ex0/*   |
+| **Files to turn in**  :  *None*   |
+| **Allowed functions** :  *pgadmin, Postico, dbeaver or what you want to see the db easily*    |
 
-- Trouver un moyen de visualiser facilement la base de données à l'aide d'un logiciel.
-- Le logiciel choisi doit vous permettre de trouver et de manipuler facilement les données en utilisant leur propre
-ID correspondant
+- Trouver un moyen de *visualiser facilement la base de données* à l'aide d'un logiciel.
+- Le logiciel choisi doit vous permettre de trouver et de manipuler facilement les données en utilisant leur propre ID correspondant
 
 ### Notion abordees
 
 Pour installer pgAdmin :
+
 ```bash
 sudo snap install pgadmin4
 ```
+
+Pour lancer PgAdmin
+```bash
+sudo snap install pgadmin4
+```
+
+----------------------------------------------------------------------------
+
+## Exercice 02
+
+### First table
+
+- Turn-in directory : ***ex02/***
+- Files to turn in : table.*
+- Allowed functions : All
+
+Créer une table postgres en utilisant les données d'un CSV provenant du dossier ```customer```.
+
+- Nommer les tables selon le nom du CSV mais sans l'extension du fichier, par exemple
+exemple : ```data_2022_oct```
+
+- *Le nom des colonnes doit être le même que celui des fichiers CSV* et avoir le type approprié.
+
+> Attention vous devez avoir au moins 6 types de données différents.
+
+- La première colonne doit obligatoirement contenir un **DATETIME**.
+
+> [!NOTE]
+> Attention, les typages ne sont pas tout à fait les mêmes que sous Maria DB
