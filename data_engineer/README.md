@@ -13,7 +13,11 @@
 2. [Introduction.](#introduction)
 3. [Exercice 00: Create postgres DB.](#exercice-00)
 4. [Exercice 01: Show me your DB.](#exercice-01)
-5. [Exercice 01: First table.](#exercice-02)
+5. [Exercice 0: First table.](#exercice-02)
+
+- [Utilisation et commandes pgAdmin](/data_engineer/commands_pgadmin.md)
+
+- [Utilisation et commandes Postgres](/data_engineer/commands_psql.md)
 
 ----------------------------------------------------------------------------
 
@@ -98,7 +102,7 @@ piscineds=#
 
 Pour pouvoir créer une base de données, il faut que le serveur ***PostgreSQL*** soit lancé.
 
-Liste des commandes psql: [commandes_psql](/data_engineer/commands_psql.md)
+Liste des commandes psql: [commandes_psql](/data_engineer/Docs/commands_psql.md)
 
 Pour verifier si postgres est bien installee:
 
@@ -210,7 +214,7 @@ Pour sortir de la base de donnees, saisir :
 
 |                                   |
 | :-------------------------------- |
-| **Turn-in directory** :  *ex0/*   |
+| **Turn-in directory** :  *ex01/*  |
 | **Files to turn in**  :  *None*   |
 | **Allowed functions** :  *pgadmin, Postico, dbeaver or what you want to see the db easily*    |
 
@@ -226,9 +230,12 @@ sudo snap install pgadmin4
 ```
 
 Pour lancer PgAdmin
+
 ```bash
 sudo snap install pgadmin4
 ```
+
+- [Utilisation et commandes pgAdmin4](/data_engineer/Docs/commands_pgadmin.md)
 
 ----------------------------------------------------------------------------
 
@@ -236,11 +243,13 @@ sudo snap install pgadmin4
 
 ### First table
 
-- Turn-in directory : ***ex02/***
-- Files to turn in : table.*
-- Allowed functions : All
+|                                   |
+| :-------------------------------- |
+| **Turn-in directory** :  *ex02/*   |
+| **Files to turn in**  :  **table*.**   |
+| **Allowed functions** :  *All*    |
 
-Créer une table postgres en utilisant les données d'un CSV provenant du dossier ```customer```.
+**Créer une table postgres** en utilisant les données d'un CSV provenant du dossier ```customer```.
 
 - Nommer les tables selon le nom du CSV mais sans l'extension du fichier, par exemple
 exemple : ```data_2022_oct```

@@ -1,48 +1,206 @@
 # Commandes psql
 
-## General
+> Created by alex lamizana 14/01/2025
+----------------------------------------------------------------------------
+
+## [Index](/README.md)
+
+### Sommaire
+
+1. [Introduction.](#introduction)
+2. [Commandes principales.](#commandes-principales)
+3. [General.](#general)
+4. [help.](#help)
+5. [Query Buffer.](#query-buffer)
+
+----------------------------------------------------------------------------
+
+## Introduction
+
+Pour acceder a Postgres :
 
 ```bash
-  \bind [PARAM]...       set query parameters
-  \copyright             show PostgreSQL usage and distribution terms
-  \crosstabview [COLUMNS] execute query and display result in crosstab
-  \errverbose            show most recent error message at maximum verbosity
-  \g [(OPTIONS)] [FILE]  execute query (and send result to file or |pipe);
-                         \g with no arguments is equivalent to a semicolon
-  \gdesc                 describe result of query, without executing it
-  \gexec                 execute query, then execute each value in its result
-  \gset [PREFIX]         execute query and store result in psql variables
-  \gx [(OPTIONS)] [FILE] as \g, but forces expanded output mode
-  \q                     quit psql
-  \watch [[i=]SEC] [c=N] execute query every SEC seconds, up to N times
+$> sudo -i -u postgres
+postgres@alex-Vm:~$ psql
+postgres=# 
 ```
 
--------------------------------------------------------------------------------
+----------------------------------------------------------------------------
+
+## Commandes principales
+
+### Commandes de base
+
+```sql
+\l                      - Afficher les bases de données.
+\c nom_de_la_base       - Se connecter à une base de données spécifique.
+\dt                     - Lister les tables dans la base.
+\d nom_de_la_table      - Afficher les colonnes d'une table .
+\du                     - Liste tous les utilisateurs.
+```
+
+### Gestion des bases de données
+
+- Créer une base de données :
+
+  ```sql
+  CREATE DATABASE nom_base;
+  ```
+
+- Supprimer une base de données :
+
+  ```sql
+  DROP DATABASE nom_base;
+  ```
+
+### Gestion des utilisateurs
+
+- Créer un utilisateur :
+
+  ```sql
+  CREATE USER nom_utilisateur WITH PASSWORD 'mot_de_passe';
+  ```
+
+- Supprimer un utilisateur :
+
+  ```sql
+  DROP USER nom_utilisateur;
+  ```
+
+- Attribuer des droits à un utilisateur :
+
+  ```sql
+  GRANT ALL PRIVILEGES ON DATABASE nom_base TO nom_utilisateur;
+  ```
+
+- Retirer des droits à un utilisateur :
+
+  ```sql
+  REVOKE ALL PRIVILEGES ON DATABASE nom_base FROM nom_utilisateur;
+  ```
+
+### Gestion des tables
+
+- Créer une table :
+
+  ```sql
+  CREATE TABLE nom_table (
+    colonne1 TYPE1,
+    colonne2 TYPE2,
+    ...
+  );
+  ```
+
+- Supprimer une table :
+
+  ```sql
+  DROP TABLE nom_table;
+  ```
+
+- Modifier une table (ajouter une colonne) :
+
+  ```sql
+  ALTER TABLE nom_table ADD COLUMN nom_colonne TYPE;
+  ```
+
+- Modifier une table (supprimer une colonne) :
+
+  ```sql
+  ALTER TABLE nom_table DROP COLUMN nom_colonne;
+  ```
+
+### Gestion des donnees
+
+- Insérer des données :
+
+  ```sql
+  INSERT INTO nom_table (colonne1, colonne2) VALUES (valeur1, valeur2);
+  ```
+
+- Mettre à jour des données :
+
+  ```sql
+  UPDATE nom_table SET colonne1 = nouvelle_valeur WHERE condition;
+  ```
+
+- Supprimer des données :
+
+  ```sql
+  DELETE FROM nom_table WHERE condition;
+  ```
+
+- Lire des données :
+
+  ```sql
+  SELECT colonne1, colonne2 FROM nom_table WHERE condition;
+  ```
+
+----------------------------------------------------------------------------
+
+## General
+
+```sql
+\bind [PARAM]...        - Définir les paramètres de la requête.
+
+\copyright              - Montrer les conditions d'utilisation et de 
+                          distribution de PostgreSQL.
+
+\crosstabview [COLUMNS] - Exécuter la requête et afficher le résultat dans 
+                            un tableau croisé
+
+\errverbose             - Afficher le message d'erreur le plus récent à 
+                            la verbosité maximale.
+
+\g [(OPTIONS)] [FILE]   - Exécute la requête (et envoie le résultat 
+                          dans un fichier ou dans le tuyau) ;
+                            - \g sans argument est équivalent à un point-virgule.
+
+\gdesc                  - Décrire le résultat d'une requête, sans l'exécuter.
+
+\gexec                  - Exécuter la requête, puis exécuter chaque valeur 
+                          dans son résultat.
+
+\gset [PREFIX]          - Exécuter une requête et stocker le résultat dans 
+                          des variables psql.
+
+\gx [(OPTIONS)] [FILE]  - Comme \g, mais force le mode de sortie étendu.
+
+\q                      - Quitte psql.
+
+\watch [[i=]SEC] [c=N]  - Exécuter la requête toutes les SEC secondes, 
+                            jusqu'à N fois.
+```
+
+----------------------------------------------------------------------------
 
 ## Help
 
 ```bash
-  \? [commands]          show help on backslash commands
-  \? options             show help on psql command-line options
-  \? variables           show help on special variables
-  \h [NAME]              help on syntax of SQL commands, * for all commands
+\? [commands]         - Afficher l'aide sur les commandes backslash.
+
+\? options            - Afficher l'aide sur les options de la ligne de commande psql.
+
+\? variables          - Afficher l'aide sur les variables spéciales.
+
+\h [NAME]             - Aide sur la syntaxe des commandes SQL, 
+                        * pour toutes les commandes.
 ```
 
--------------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 ## Query Buffer
 
 ```bash
-  \e [FILE] [LINE]       edit the query buffer (or file) with external editor
-  \ef [FUNCNAME [LINE]]  edit function definition with external editor
-  \ev [VIEWNAME [LINE]]  edit view definition with external editor
-  \p                     show the contents of the query buffer
-  \r                     reset (clear) the query buffer
-  \s [FILE]              display history or save it to file
-  \w FILE                write query buffer to file
+\e [FILE] [LINE]       edit the query buffer (or file) with external editor
+\ef [FUNCNAME [LINE]]  edit function definition with external editor
+\ev [VIEWNAME [LINE]]  edit view definition with external editor
+\p                     show the contents of the query buffer
+\r                     reset (clear) the query buffer
+\s [FILE]              display history or save it to file
+\w FILE                write query buffer to file
 ```
 
--------------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 ## Input/Output
 
@@ -56,7 +214,7 @@
   \warn [-n] [STRING]    write string to standard error (-n for no newline)
 ```
 
--------------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 ## Conditional
 
@@ -67,7 +225,7 @@
   \endif                 end conditional block
 ```
 
--------------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 ## Informational
 
@@ -127,7 +285,7 @@
   \z[S]   [PATTERN]      same as \dp
 ```
 
--------------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 ## Large Objects
 
@@ -139,7 +297,7 @@
   \lo_unlink LOBOID      delete a large object
 ```
 
--------------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 ## Formatting
 
@@ -160,7 +318,7 @@
   \x [on|off|auto]       toggle expanded output (currently off)
 ```
 
--------------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 ## Connection
 
@@ -172,7 +330,7 @@
   \password [USERNAME]   securely change the password for a user
 ```
 
--------------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 ## Operating System
 
@@ -184,7 +342,7 @@
   \! [COMMAND]           execute command in shell or start interactive shell
 ```
 
--------------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 ## Variables
 
