@@ -15,9 +15,9 @@
 4. [Exercice 01: Show me your DB.](#exercice-01)
 5. [Exercice 0: First table.](#exercice-02)
 
-- [Utilisation et commandes pgAdmin](/data_engineer/commands_pgadmin.md)
+- [Utilisation et commandes pgAdmin](/Docs/commands_pgadmin.md)
 
-- [Utilisation et commandes Postgres](/data_engineer/commands_psql.md)
+- [Utilisation et commandes Postgres](/Docs/commands_psql.md)
 
 ----------------------------------------------------------------------------
 

@@ -35,9 +35,9 @@ Pour valider cette piscine, vous devez réaliser les projets suivants :
 - [Data Science 3: Data Scientist part 1](/OOP/README.md)
 - [Data Science 4: Data Scientist part 2](/Dot/README.md)
 
-***[Utilisation et commandes pgAdmin4](/data_engineer/Docs/commands_pgadmin.md)***
+***[Utilisation et commandes pgAdmin4](/Docs/commands_pgadmin.md)***
 
-***[Utilisation et commandes Postgres](/data_engineer/Docs/commands_psql.md)***
+***[Utilisation et commandes Postgres](/Docs/commands_psql.md)***
 
 Vous devez valider chaque projet dans cet ordre.
 En effet, il ne sera pas possible de s'inscrire à un projet si le projet précédent n'est pas valide.
