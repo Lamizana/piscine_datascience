@@ -32,11 +32,11 @@ postgres=#
 ### Commandes de base
 
 ```sql
-\l                      - Afficher les bases de données.
-\c nom_de_la_base       - Se connecter à une base de données spécifique.
-\dt                     - Lister les tables dans la base.
-\d nom_de_la_table      - Afficher les colonnes d'une table .
-\du                     - Liste tous les utilisateurs.
+\l                      -- Afficher les bases de données.
+\c nom_de_la_base       -- Se connecter à une base de données spécifique.
+\dt                     -- Lister les tables dans la base.
+\d nom_de_la_table      -- Afficher les colonnes d'une table .
+\du                     -- Liste tous les utilisateurs.
 ```
 
 ### Gestion des bases de données
@@ -91,6 +91,26 @@ postgres=#
   );
   ```
 
+- Creation d'une table a partir d'un fichier CSV :
+
+  ```sql
+  CREATE TABLE data_2022_dec (
+      event_time TIMESTAMP,          -- Date et heure de l'événement
+      event_type VARCHAR(50),        -- Type d'événement (par exemple 'achat', 'connexion')
+      product_id INTEGER,            -- Identifiant du produit
+      price DECIMAL(10, 2),          -- Prix du produit (10 chiffres au total, dont 2 après la virgule)
+      user_id INTEGER,               -- Identifiant de l'utilisateur
+      user_session VARCHAR(255),     -- Identifiant de la session utilisateur
+  );
+  ```
+
+- Recuperation du fichier CSV :
+
+  ```sql
+  \copy data_2022_dec (event_time, event_type, product_id, price, user_id, user_session)
+  FROM '/tmp/data_2022_dec.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',');
+  ```
+
 - Supprimer une table :
 
   ```sql
@@ -123,10 +143,10 @@ postgres=#
   UPDATE nom_table SET colonne1 = nouvelle_valeur WHERE condition;
   ```
 
-- Supprimer des données :
+- Supprimer des données  selon une condition:
 
   ```sql
-  DELETE FROM nom_table WHERE condition;
+  DELETE FROM data_2022_dec WHERE event_type = 'cart';
   ```
 
 - Afficher une seule colonne dans une table :

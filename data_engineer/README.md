@@ -235,7 +235,7 @@ Pour lancer PgAdmin
 sudo snap install pgadmin4
 ```
 
-- [Utilisation et commandes pgAdmin4](/data_engineer/Docs/commands_pgadmin.md)
+- [Utilisation et commandes pgAdmin4](/Docs/commands_pgadmin.md)
 
 ----------------------------------------------------------------------------
 
@@ -263,18 +263,62 @@ exemple : ```data_2022_oct```
 > [!NOTE]
 > Attention, les typages ne sont pas tout à fait les mêmes que sous Maria DB
 
-```sql
-CREATE TABLE events (
-    event_time TIMESTAMP,          -- Date et heure de l'événement
-    event_type VARCHAR(50),        -- Type d'événement (par exemple 'achat', 'connexion')
-    product_id INTEGER,            -- Identifiant du produit
-    price DECIMAL(10, 2),          -- Prix du produit (10 chiffres au total, dont 2 après la virgule)
-    user_id INTEGER,               -- Identifiant de l'utilisateur
-    user_session VARCHAR(255),     -- Identifiant de la session utilisateur
-);
-```
+### Notion abordees
 
-```sql
-\copy data_2022_dec (event_time, event_type, product_id, price, user_id, user_session)
-FROM '/tmp/data_2022_dec.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',');
+- Creation d'une table a partir d'un fichier CSV :
+
+  ```sql
+  CREATE TABLE data_2022_dec (
+      event_time TIMESTAMP,          -- Date et heure de l'événement
+      event_type VARCHAR(50),        -- Type d'événement (par exemple 'achat', 'connexion')
+      product_id INTEGER,            -- Identifiant du produit
+      price DECIMAL(10, 2),          -- Prix du produit (10 chiffres au total, dont 2 après la virgule)
+      user_id INTEGER,               -- Identifiant de l'utilisateur
+      user_session VARCHAR(255),     -- Identifiant de la session utilisateur
+  );
+  ```
+
+- Recuperation du fichier CSV :
+
+  ```sql
+  \copy data_2022_dec (event_time, event_type, product_id, price, user_id, user_session)
+  FROM '/tmp/data_2022_dec.csv' WITH (FORMAT csv, HEADER true, DELIMITER ',');
+  ```
+
+----------------------------------------------------------------------------
+
+## Exercice 03
+
+### Automatic table
+
+|                                                 |
+| :---------------------------------------------- |
+| **Turn-in directory** :  *ex03/*                |
+| **Files to turn in**  :  **automatic_table.***  |
+| **Allowed functions** :  *All*                  |
+
+- Nous sommes à la fin du mois de février 2022, vous devriez être capable de créer des tableaux avec des données extraites d'un CSV.
+
+- Maintenant, en plus, récupérez automatiquement tous les CSV du dossier ***customer*** et nommez les tableaux selon le nom du CSV, mais sans l'extension du fichier.
+  - exemple : "data_2022_oct"
+
+- Ci-dessous un exemple de la structure de répertoire attendue :
+
+```bash
+$> ls -alR
+total XX
+drwxrwxr-x 2 eagle eagle 4096 Fev 42 20:42 .
+drwxrwxr-x 5 eagle eagle 4096 Fev 42 20:42 ..
+drwxrwxr-x 2 eagle eagle 4096 Jan 42 20:42 customer
+drwxrwxr-x 2 eagle eagle 4096 Jan 42 20:42 items
+./customer:
+total XX
+drwxrwxr-x 2 eagle eagle 4096 Fev 42 20:42 .
+drwxrwxr-x 5 eagle eagle 4096 Fev 42 20:42 ..
+-rw-rw-r-- 1 eagle eagle XXXX Mar 42 20:42 data_2022_dec.csv
+-rw-rw-r-- 1 eagle eagle XXXX Mar 42 20:42 data_2022_nov.csv
+-rw-rw-r-- 1 eagle eagle XXXX Mar 42 20:42 data_2022_oct.csv
+-rw-rw-r-- 1 eagle eagle XXXX Mar 42 20:42 data_2023_jan.csv
+./items:
+...
 ```
