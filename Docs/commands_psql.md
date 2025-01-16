@@ -129,6 +129,24 @@ postgres=#
   DELETE FROM nom_table WHERE condition;
   ```
 
+- Afficher une seule colonne dans une table :
+  
+  ```sql
+  SELECT event_time FROM data_2022_dec;
+  ```
+  
+- Afficher une seule colonne dans une table selon une condition :
+  
+  ```sql
+  SELECT event_time FROM data_2022_dec WHERE event_type = 'cart';
+  ```
+
+- Afficher toutes les colonnes sur 10 lignes :
+  
+  ```sql
+  SELECT * FROM data_2022_dec LIMIT 10;
+  ```
+  
 - Lire des données :
 
   ```sql
