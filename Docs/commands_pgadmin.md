@@ -39,11 +39,6 @@ sudo snap install pgadmin4
 
 Utiliser l'outil de requête et saisir une requête SQL. Pour ce faire, utilisez l'instruction **COPY**:
 
-/lib/postgresql/16/bin
-/lib/postgresql/16/bin
-
-/etc/postgresql/16/main/postgresql.conf
-
 ```bash
 COPY characters
 FROM '/home/lamizana/Documents/datascience/data_engineer'

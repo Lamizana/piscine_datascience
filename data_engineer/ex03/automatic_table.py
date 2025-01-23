@@ -13,7 +13,7 @@ DB_PASSWORD = 'Lamizana@1987'
 target_user = 'alamizan'
 
 # Dossier contenant les fichiers CSV
-csv_directory = '/tmp/subject/customer'
+csv_directory = '/home/lamizana/subject/customer2/'
 
 # Connexion à la base de données PostgreSQL
 conn = psycopg2.connect(
@@ -26,11 +26,11 @@ conn = psycopg2.connect(
 
 column_types = {
     "event_time": "TIMESTAMP",
-    "event_type": "TEXT",
+    "event_type": "VARCHAR(50)",
     "product_id": "INTEGER",
     "price": "DECIMAL(10,2)",
     "user_id": "INTEGER",
-    "user_session": "TEXT"
+    "user_session": "VARCHAR(50)"
 }
 
 # Création d'un curseur pour exécuter des requêtes

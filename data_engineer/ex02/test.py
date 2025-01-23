@@ -5,17 +5,17 @@ from psycopg2 import sql
 
 # Configuration de la connexion à PostgreSQL
 db_config = {
-    "host": "localhost",          # Adresse du serveur PostgreSQL
-    "port": 5432,                 # Port PostgreSQL
-    "database": "piscineds",  # Nom de votre base de données
-    "user": "postgres",          # Nom de l'utilisateur PostgreSQL
-    "password": "Lamizana@1987"   # Mot de passe PostgreSQL
+    "host": "localhost",            # Adresse du serveur PostgreSQL
+    "port": 5432,                   # Port PostgreSQL
+    "database": "piscineds",        # Nom de votre base de données
+    "user": "postgres",             # Nom de l'utilisateur PostgreSQL
+    "password": "Lamizana@1987"     # Mot de passe PostgreSQL
 }
 
 target_user = 'alamizan'
 
 # Chemin vers le fichier CSV
-csv_file_path = "/tmp/subject/customer/data_2022_nov.csv"
+csv_file_path = "/home/lamizana/subject/customer2/toto.csv"
 
 # Nom de la table à créer/importer
 table_name = "data_2022_dec"
@@ -51,15 +51,13 @@ def create_table_and_import_csv_with_types(csv_path, table, db_params, column_ty
             columns_with_types = ", ".join([f"{col} {column_types[col]}" for col in headers])
             create_table_query = f"CREATE TABLE IF NOT EXISTS {table} ({columns_with_types});"
             cursor.execute(create_table_query)
-            print(f"Table '{table}' créée avec succès ou déjà existante.")
+            print(f"Colonne '{col}' créée avec succès ou déjà existante.")
 
             # Utiliser COPY pour insérer les données directement dans la table
             with open(csv_file_path, 'r') as f:
-                # table_name = os.path.splitext(f)[0]  # Enlever l'extension .csv
                 next(f)  # Ignore the header row
                 cursor.copy_from(f, table_name, sep=',', null='')  # Charger les données du CSV dans la table
             
- 
             # --------------------------------------------------------------- #
             # 1. Accorder tous les privilèges sur la base de données
             cursor.execute(sql.SQL("GRANT ALL PRIVILEGES ON DATABASE {} TO {};").format(
@@ -71,13 +69,11 @@ def create_table_and_import_csv_with_types(csv_path, table, db_params, column_ty
             cursor.execute(sql.SQL("GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO {};").format(
             sql.Identifier(target_user)
             ))
+
             # --------------------------------------------------------------- #
-
-
             # Validation des modifications
             conn.commit()
-            print(f"Les données du fichier '{csv_path}' ont été importées avec succès dans la table '{table}'.")
-
+    
     except Exception as e:
         print(f"Erreur : {e}")
 
@@ -87,6 +83,9 @@ def create_table_and_import_csv_with_types(csv_path, table, db_params, column_ty
             cursor.close()
         if conn:
             conn.close()
+        print(f"La Table {table_name} créée avec succès !")
+
+
 
 # Appel de la fonction
 create_table_and_import_csv_with_types(csv_file_path, table_name, db_config, column_types)
