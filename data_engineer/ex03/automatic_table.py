@@ -51,7 +51,7 @@ for filename in os.listdir(csv_directory):
         # Créer la table dans PostgreSQL à partir du DataFrame
         # Construire la requête CREATE TABLE dynamique
         columns = df.columns
-        column_definitions = ', '.join([f'"{col}" TEXT' for col in columns])  # Définit chaque colonne comme de type TEXT par défaut
+        column_definitions = ', '.join([f"{col} {column_types[col]}" for col in columns])  # Définit chaque colonne comme de type TEXT par défaut
         create_table_query = sql.SQL("""
             CREATE TABLE IF NOT EXISTS {table_name} (
                 {columns}

@@ -37,6 +37,7 @@ COLUNM_TYPES = {
 CSV_PATH = "/home/lamizana/subject/customer/data_2022_dec.csv"
 TABLE_NAME = "data_2022_dec"
 
+
 #####################################################################
 # Definitions locales de fonctions
 def color(texte: str, couleur="37", style="0") -> str:
@@ -58,7 +59,7 @@ def csv_is_valid() -> bool:
     print(color("Verification du fichiers CSV...", 33, 4))
     try:
         if len(sys.argv) != 2:
-            raise Exception ("Le programme doit prendre le chemin du fichier.")
+            raise ValueError("2 args necessaires, le programme et le chemin du fichier")
         with open(sys.argv[1], 'r', encoding='utf-8') as file:
             reader = csv.reader(file)
     except Exception as e:
@@ -94,17 +95,16 @@ def create_table(csv_path: str, table: str) -> None:
         for col in headers:
             if col not in COLUNM_TYPES:
                 raise ValueError(f"Aucun type défini pour la colonne '{col}'.")
+            
+        # Création de la table :
+        colunms_with_type = ", ".join([f"{col} {COLUNM_TYPES[col]}" for col in headers])
+        create_table_query = f"CREATE TABLE IF NOT EXISTS {table} ({colunms_with_type});"
+        cursor.execute(create_table_query)
 
-            # Création de la table :
-            colunms_with_type = ", ".join([f"{col} {COLUNM_TYPES[col]}" for col in headers])
-            create_table_query = f"CREATE TABLE IF NOT EXISTS {table} ({colunms_with_type});"
-            cursor.execute(create_table_query)
-            print(color(f"\t- Colonne '{col}' créée avec succès ou déjà existante.", 33, 3))
-
-            # Utiliser COPY pour insérer les données directement dans la table
-            with open(csv_path, 'r') as f:
-                next(f)
-                cursor.copy_from(f, table, sep=',', null='')
+        # Utiliser COPY pour insérer les données directement dans la table
+        with open(csv_path, 'r') as f:
+            next(f)
+            cursor.copy_from(f, table, sep=',', null='')
 
         # Validation des modifications
         conn.commit()
