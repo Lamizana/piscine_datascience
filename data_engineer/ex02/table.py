@@ -9,6 +9,8 @@
 # Importations de fonctions externes
 import sys
 import csv
+import psycopg2
+from psycopg2 import sql
 
 #####################################################################
 # Variables globales
@@ -17,8 +19,8 @@ DB_CONFIG = {
     "host": "localhost",            # Adresse du serveur PostgreSQL
     "port": 5432,                   # Port PostgreSQL
     "database": "piscineds",        # Nom de votre base de données
-    "user": "postgres",             # Nom de l'utilisateur PostgreSQL
-    "password": "Lamizana@1987"     # Mot de passe PostgreSQL
+    "user": "alamizan",             # Nom de l'utilisateur PostgreSQL
+    "password": "mysecretpassword"  # Mot de passe PostgreSQL
 }
 
 # Définition des types de colonnes
@@ -31,16 +33,13 @@ COLUNM_TYPES = {
     "user_session": "VARCHAR(50)"
 }
 
-# Utilisateur qui aura tout les droits :
-TARGET_USER = 'alamizan'
-
 # Chemin vers le fichier CSV et nom de la table :
-CSV_PATH = "/home/lamizana/subject/customer2/toto.csv"
+CSV_PATH = "/home/lamizana/subject/customer/data_2022_dec.csv"
 TABLE_NAME = "data_2022_dec"
 
 #####################################################################
 # Definitions locales de fonctions
-def color(texte, couleur="37", style="0") -> str:
+def color(texte: str, couleur="37", style="0") -> str:
     """
     Applique une couleur et un style à un texte.
     - couleur : Code couleur de 30 a 47 (ex: '31' pour rouge)
@@ -71,7 +70,7 @@ def csv_is_valid() -> bool:
 
 
 # ---------------------------------------------------------------- #
-def create_table(csv_path: str) -> bool:
+def create_table(csv_path: str, table: str) -> None:
     """
     Permet de creer une table dans la base de donnees 'piscineds' a partir
     d'un fichier CSV :
@@ -79,14 +78,48 @@ def create_table(csv_path: str) -> bool:
     - table : nom de la Table.
     """
 
-    table_name = sys.argv[1].split("/")
-    table_name = str(table_name[-1][:-4])
-    print(color(f"\nCreation de la Table '{table_name}':", 33, 4))
-    print(color(f"\t- Emplacement: {csv_path}...", 33, 3))
+    try:
+        # Connexion à PostgreSQL :
+        conn = psycopg2.connect(**DB_CONFIG)
+        cursor = conn.cursor()
+        print(color(f"\t- Connexion Postgres reussi", 33, 3))
 
+        # Lecture du fichier CSV pour détecter les colonnes :
+        with open(csv_path, 'r') as csv_file:
+            csv_reader = csv.reader(csv_file)
+            headers = next(csv_reader)
+        print(color(f"\nHeader :", 33, 4), headers)
 
-    return (True)
+        # Validation des colonnes par rapport aux types définis :
+        for col in headers:
+            if col not in COLUNM_TYPES:
+                raise ValueError(f"Aucun type défini pour la colonne '{col}'.")
 
+            # Création de la table :
+            colunms_with_type = ", ".join([f"{col} {COLUNM_TYPES[col]}" for col in headers])
+            create_table_query = f"CREATE TABLE IF NOT EXISTS {table} ({colunms_with_type});"
+            cursor.execute(create_table_query)
+            print(color(f"\t- Colonne '{col}' créée avec succès ou déjà existante.", 33, 3))
+
+            # Utiliser COPY pour insérer les données directement dans la table
+            with open(csv_path, 'r') as f:
+                next(f)
+                cursor.copy_from(f, table, sep=',', null='')
+
+        # Validation des modifications
+        conn.commit()
+
+    except Exception as e:
+        print(color(f"Erreur: {e}", 31, 3))
+    else:
+        print(color(f"\nTable {table} créée avec succès !", 32, 1))
+    finally:
+        # Fermeture des connexions :
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+    
 
 # ---------------------------------------------------------------- #
 def main() -> int:
@@ -94,21 +127,23 @@ def main() -> int:
     Fonction programme principal.
     """
 
-    print(color("\n\t-------------------------", 32, 1))
-    print(color("\tLANCEMENT DU PROGRAMME !!", 32, 1))
-    print(color("\t-------------------------", 32, 1), "\n")
+    print(color("\n\t-------------------------", 35, 1))
+    print(color("\tLANCEMENT DU PROGRAMME !!", 35, 1))
+    print(color("\t-------------------------", 35, 1), "\n")
 
-    # ------------------------------------------------------- #
     if csv_is_valid() is False:
         return(1)
 
-    # ------------------------------------------------------- #
-    if create_table(sys.argv[1]) is False:
-        return(1)
-    
-    print(color("\n\t-------------------------", 32, 1))
-    print(color("\tFERMETURE DU PROGRAMME !!", 32, 1))
-    print(color("\t-------------------------", 32, 1), "\n")
+    table_name = sys.argv[1].split("/")
+    table_name = str(table_name[-1][:-4])
+    print(color(f"\nCreation de la Table '{table_name}':", 33, 4))
+    print(color(f"\t- Emplacement: {sys.argv[1]}...", 33, 3))
+
+    create_table(sys.argv[1], table_name)
+
+    print(color("\n\t-------------------------", 35, 1))
+    print(color("\tFERMETURE DU PROGRAMME !!", 35, 1))
+    print(color("\t-------------------------", 35, 1), "\n")
     return (0)
 
 

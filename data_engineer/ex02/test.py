@@ -15,7 +15,7 @@ db_config = {
 target_user = 'alamizan'
 
 # Chemin vers le fichier CSV
-csv_file_path = "/home/lamizana/subject/customer2/toto.csv"
+csv_file_path = "/home/lamizana/subject/customer2/data_2022_dec.csv"
 
 # Nom de la table à créer/importer
 table_name = "data_2022_dec"
@@ -69,21 +69,24 @@ def create_table_and_import_csv_with_types(csv_path, table, db_params, column_ty
             cursor.execute(sql.SQL("GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO {};").format(
             sql.Identifier(target_user)
             ))
-
+            
             # --------------------------------------------------------------- #
             # Validation des modifications
             conn.commit()
     
     except Exception as e:
         print(f"Erreur : {e}")
-
+    else:
+        print(f"La Table {table_name} créée avec succès !")
     finally:
         # Fermeture des connexions
         if cursor:
             cursor.close()
         if conn:
             conn.close()
-        print(f"La Table {table_name} créée avec succès !")
+
+        print("Acces")
+
 
 
 
