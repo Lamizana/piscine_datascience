@@ -10,7 +10,6 @@
 import sys
 import csv
 import psycopg2
-from psycopg2 import sql
 
 #####################################################################
 # Variables globales
@@ -133,6 +132,7 @@ def main() -> int:
 
     if csv_is_valid() is False:
         return(1)
+
 
     table_name = sys.argv[1].split("/")
     table_name = str(table_name[-1][:-4])

@@ -1,30 +1,33 @@
+#####################################################################
+# Programme Python : Automatic table [Module data engineer 03]      #
+#                                                                   @
+# Récupérez automatiquement tous les CSV du dossier customer et      #
+# nommez les tableaux selon le nom du CSV,                          #
+# mais sans l'extension du fichier.                                 #
+#                                                                   #
+# Auteur : A.Lamizana, Angouleme, janvier-2025                      #
+# -*-coding:Utf-8 -*                                                #
+#                                       https://github.com/Lamizana #
+#####################################################################
+# Importations de fonctions externes :
 import os
-import pandas as pd
+import sys
+import csv
 import psycopg2
-from psycopg2 import sql
 
-# Configuration de la connexion PostgreSQL
-DB_HOST = 'localhost'
-DB_PORT = '5432'  # Port PostgreSQL par défaut
-DB_NAME = 'piscineds'
-DB_USER = 'postgres'
-DB_PASSWORD = 'Lamizana@1987'
+#####################################################################
+# Variables globales
+# Configuration de la connexion à PostgreSQL :
+DB_CONFIG = {
+    "host": "localhost",            # Adresse du serveur PostgreSQL
+    "port": 5432,                   # Port PostgreSQL
+    "database": "piscineds",        # Nom de votre base de données
+    "user": "alamizan",             # Nom de l'utilisateur PostgreSQL
+    "password": "mysecretpassword"  # Mot de passe PostgreSQL
+}
 
-target_user = 'alamizan'
-
-# Dossier contenant les fichiers CSV
-csv_directory = '/home/lamizana/subject/customer2/'
-
-# Connexion à la base de données PostgreSQL
-conn = psycopg2.connect(
-    host=DB_HOST,
-    port=DB_PORT,
-    dbname=DB_NAME,
-    user=DB_USER,
-    password=DB_PASSWORD
-)
-
-column_types = {
+# Définition des types de colonnes
+COLUNM_TYPES = {
     "event_time": "TIMESTAMP",
     "event_type": "VARCHAR(50)",
     "product_id": "INTEGER",
@@ -33,60 +36,140 @@ column_types = {
     "user_session": "VARCHAR(50)"
 }
 
-# Création d'un curseur pour exécuter des requêtes
-cur = conn.cursor()
 
-# Parcourir tous les fichiers dans le dossier CSV
-for filename in os.listdir(csv_directory):
-    if filename.endswith('.csv'):
-        # Construire le chemin complet du fichier CSV
-        csv_file_path = os.path.join(csv_directory, filename)
-        
-        # Lire le fichier CSV dans un DataFrame
-        df = pd.read_csv(csv_file_path)
-        
-        # Nom de la table basé sur le nom du fichier CSV
-        table_name = os.path.splitext(filename)[0]  # Enlever l'extension .csv
-        
-        # Créer la table dans PostgreSQL à partir du DataFrame
-        # Construire la requête CREATE TABLE dynamique
-        columns = df.columns
-        column_definitions = ', '.join([f"{col} {column_types[col]}" for col in columns])  # Définit chaque colonne comme de type TEXT par défaut
-        create_table_query = sql.SQL("""
-            CREATE TABLE IF NOT EXISTS {table_name} (
-                {columns}
-            );
-        """).format(
-            table_name=sql.Identifier(table_name),
-            columns=sql.SQL(column_definitions)
-        )
-        
-        # Exécuter la création de la table
-        cur.execute(create_table_query)
-        
-        # Utiliser COPY pour insérer les données directement dans la table
-        with open(csv_file_path, 'r') as f:
-            next(f)  # Ignore the header row
-            cur.copy_from(f, table_name, sep=',', null='')  # Charger les données du CSV dans la table
-        
-        # --------------------------------------------------------------- #
-        # 1. Accorder tous les privilèges sur la base de données
-        cur.execute(sql.SQL("GRANT ALL PRIVILEGES ON DATABASE {} TO {};").format(
-            sql.Identifier(DB_NAME),
-            sql.Identifier(target_user)
-        ))
+#####################################################################
+# Definitions locales de fonctions :
+def color(texte: str, couleur="37", style="0") -> str:
+    """
+    Applique une couleur et un style à un texte.
+    - couleur : Code couleur de 30 a 47 (ex: '31' pour rouge)
+    - style : Style du texte de 0 a 5(ex: '1' pour gras)
+    """
 
-        # 2. Accorder tous les privilèges sur toutes les tables existantes dans le schéma public
-        cur.execute(sql.SQL("GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO {};").format(
-        sql.Identifier(target_user)
-        ))
-        # --------------------------------------------------------------- #
+    return f"\033[{style};{couleur}m{texte}\033[0m"
 
-        # Commit des changements
-        conn.commit()
 
-# Fermer le curseur et la connexion
-cur.close()
-conn.close()
+# ---------------------------------------------------------------- #
+def csv_is_valid(path: str) -> bool:
+    """
+    Verifie la validite du fichier csv.
+    """
 
-print("Les fichiers CSV ont été importés avec succès dans la base de données PostgreSQL.")
+    print(color("\nVerification du fichiers CSV...", 30, 4))
+    try:
+        with open(path, 'r', encoding='utf-8') as file:
+            reader = csv.reader(file)
+    except Exception as e:
+        print(color(f"\nErreur lors de la lecture du fichier CSV: {e}\n", 31, 3))
+        return False
+    
+    print(color("\t- Le fichier CSV est lisible.", 32, 3))
+    return (True)
+
+
+# ---------------------------------------------------------------- #
+def create_table(csv_path: str, table: str, cursor) -> None:
+    """
+    Permet de creer une table dans la base de donnees 'piscineds' a partir
+    d'un fichier CSV :
+    - csv_path : chemin du fichiers.
+    - table : nom de la Table.
+    """
+
+    # Lecture du fichier CSV pour détecter les colonnes :
+    with open(csv_path, 'r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+        headers = next(csv_reader)
+    print(color(f"\nHeader :", 33, 4), headers)
+
+    # Validation des colonnes par rapport aux types définis :
+    for col in headers:
+        if col not in COLUNM_TYPES:
+            raise ValueError(f"Aucun type défini pour la colonne '{col}'.")
+            
+    # Création de la table :
+    colunms_with_type = ", ".join([f"{col} {COLUNM_TYPES[col]}" for col in headers])
+    create_table_query = f"CREATE TABLE IF NOT EXISTS {table} ({colunms_with_type});"
+    cursor.execute(create_table_query)
+
+    # Utiliser COPY pour insérer les données directement dans la table
+    with open(csv_path, 'r') as f:
+        next(f)
+        cursor.copy_from(f, table, sep=',', null='')
+
+    print(color(f"\n- Table '{table}' créé !", 32, 3))
+
+
+# ---------------------------------------------------------------- #
+def automatic_table() -> None:
+    """
+    Creer toutes les tables dans la base de donnees 'piscineds' a partir
+    d'un dossier:
+    - csv_directory : chemin du dossier.
+    """
+
+    try:
+        if len(sys.argv) != 2:
+            raise ValueError("2 args necessaires, le programme et le chemin du dossier")
+        
+        # Connexion à PostgreSQL :
+        conn = psycopg2.connect(**DB_CONFIG)
+        cursor = conn.cursor()
+        print(color(f"- Connexion Postgres reussi", 36, 3))
+
+        csv_directory = sys.argv[1]
+        print(color(f"csv_directory : ", 36, 1), color(csv_directory, 33, 4))
+
+        # Parcourir tous les fichiers dans le dossier CSV
+        for filename in os.listdir(csv_directory):
+            if filename.endswith('.csv'):
+                # Construire le chemin complet du fichier CSV
+                csv_file_path = os.path.join(csv_directory, filename)
+
+                # Nom de la table basé sur le nom du fichier CSV :
+                table = os.path.splitext(filename)[0]  # Enlever l'extension .csv
+                print(color("\n------------------------------------------------------", 33, 1))
+                print(color(f"- Table '{table}': ", 32, 1), color(csv_file_path, 32, 4))
+
+                if csv_is_valid(csv_file_path) is False:
+                    continue
+            
+                create_table(csv_file_path, table, cursor)
+
+                # Commit des changements :
+                conn.commit()
+
+    except Exception as e:
+        print(color(f"Erreur: {e}", 31, 3))
+    else:
+        print(color(f"\nTables créée avec succès !", 32, 1))
+    finally:
+        # Fermeture des connexions :
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+    
+
+# ---------------------------------------------------------------- #
+def main() -> int:
+    """
+    Fonction programme principal.
+    """
+
+    print(color("\n\t-------------------------", 35, 1))
+    print(color("\tLANCEMENT DU PROGRAMME !!", 35, 1))
+    print(color("\t-------------------------", 35, 1), "\n")
+
+    automatic_table()
+
+    print(color("\n\t-------------------------", 35, 1))
+    print(color("\tFERMETURE DU PROGRAMME !!", 35, 1))
+    print(color("\t-------------------------", 35, 1), "\n")
+    return (0)
+
+
+#####################################################################
+"""Programme principal"""
+if __name__ == "__main__":
+    main()

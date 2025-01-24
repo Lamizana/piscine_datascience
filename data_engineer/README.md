@@ -13,7 +13,9 @@
 2. [Introduction.](#introduction)
 3. [Exercice 00: Create postgres DB.](#exercice-00)
 4. [Exercice 01: Show me your DB.](#exercice-01)
-5. [Exercice 0: First table.](#exercice-02)
+5. [Exercice 02: First table.](#exercice-02)
+6. [Exercice 03: Automatic table.](#exercice-03)
+7. [Exercice 034: Items table.](#exercice-04)
 
 - [Utilisation et commandes pgAdmin](/Docs/commands_pgadmin.md)
 
@@ -74,7 +76,9 @@ Nous sommes fin février 2022, c'est votre premier jour dans une entreprise de v
 
 ----------------------------------------------------------------------------
 
-## Exercice 00  
+## Exercice 00
+
+----------------------------------------------------------------------------
 
 ### Create postgres DB
 
@@ -97,6 +101,8 @@ $> psql -U your_login -d piscineds -h localhost -W
 mysecretpassword
 piscineds=#
 ```
+
+----------------------------------------------------------------------------
 
 ### Notion abordees
 
@@ -210,6 +216,8 @@ Pour sortir de la base de donnees, saisir :
 
 ## Exercice 01
 
+----------------------------------------------------------------------------
+
 ### Show me your DB
 
 |                                   |
@@ -220,6 +228,8 @@ Pour sortir de la base de donnees, saisir :
 
 - Trouver un moyen de *visualiser facilement la base de données* à l'aide d'un logiciel.
 - Le logiciel choisi doit vous permettre de trouver et de manipuler facilement les données en utilisant leur propre ID correspondant
+
+----------------------------------------------------------------------------
 
 ### Notion abordees
 
@@ -241,13 +251,15 @@ sudo snap install pgadmin4
 
 ## Exercice 02
 
+----------------------------------------------------------------------------
+
 ### First table
 
-|                                   |
-| :-------------------------------- |
-| **Turn-in directory** :  *ex02/*   |
-| **Files to turn in**  :  **table*.**   |
-| **Allowed functions** :  *All*    |
+|                                     |
+| :--------------------------------   |
+| **Turn-in directory** :  *ex02/*    |
+| **Files to turn in**  :  **table*.**|
+| **Allowed functions** :  *All*      |
 
 **Créer une table postgres** en utilisant les données d'un CSV provenant du dossier ```customer```.
 
@@ -262,6 +274,8 @@ exemple : ```data_2022_oct```
 
 > [!NOTE]
 > Attention, les typages ne sont pas tout à fait les mêmes que sous Maria DB
+
+----------------------------------------------------------------------------
 
 ### Notion abordees
 
@@ -288,6 +302,8 @@ exemple : ```data_2022_oct```
 ----------------------------------------------------------------------------
 
 ## Exercice 03
+
+----------------------------------------------------------------------------
 
 ### Automatic table
 
@@ -321,4 +337,40 @@ drwxrwxr-x 5 eagle eagle 4096 Fev 42 20:42 ..
 -rw-rw-r-- 1 eagle eagle XXXX Mar 42 20:42 data_2023_jan.csv
 ./items:
 ...
+```
+
+----------------------------------------------------------------------------
+
+## Exercice 04
+
+----------------------------------------------------------------------------
+
+### Items table
+
+|                                                 |
+| :---------------------------------------------- |
+| **Turn-in directory** :  *ex04/*                 |
+| **Files to turn in**  :  **items_table.***      |
+| **Allowed functions** :  *All*                  |
+
+- Créer la table ```items``` avec les mêmes colonnes que dans le fichier **"item.csv"**.
+
+- Créer au moins **3 types de données** dans le tableau.
+
+Ci-dessous un exemple de la structure de répertoire attendue :
+
+```bash
+$> ls -alR
+total XX
+drwxrwxr-x 2 eagle eagle 4096 Fev 42 20:42 .
+drwxrwxr-x 5 eagle eagle 4096 Fev 42 20:42 ..
+drwxrwxr-x 2 eagle eagle 4096 Jan 42 20:42 customer
+drwxrwxr-x 2 eagle eagle 4096 Jan 42 20:42 items
+./customer:
+...
+./items:
+total XX
+drwxrwxr-x 2 eagle eagle 4096 Fev 42 20:42 .
+drwxrwxr-x 5 eagle eagle 4096 Fev 42 20:42 ..
+-rw-rw-r-- 1 eagle eagle XXXX Mar 42 20:42 items.csv
 ```
