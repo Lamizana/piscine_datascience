@@ -261,6 +261,8 @@ sudo snap install pgadmin4
 | **Files to turn in**  :  **table*.**|
 | **Allowed functions** :  *All*      |
 
+> [table.py](/data_engineer/ex02/table.py)
+
 **Créer une table postgres** en utilisant les données d'un CSV provenant du dossier ```customer```.
 
 - Nommer les tables selon le nom du CSV mais sans l'extension du fichier, par exemple
@@ -313,6 +315,8 @@ exemple : ```data_2022_oct```
 | **Files to turn in**  :  **automatic_table.***  |
 | **Allowed functions** :  *All*                  |
 
+> [automatic_table.py](/data_engineer/ex03/automatic_table.py)
+
 - Nous sommes à la fin du mois de février 2022, vous devriez être capable de créer des tableaux avec des données extraites d'un CSV.
 
 - Maintenant, en plus, récupérez automatiquement tous les CSV du dossier ***customer*** et nommez les tableaux selon le nom du CSV, mais sans l'extension du fichier.
@@ -352,6 +356,9 @@ drwxrwxr-x 5 eagle eagle 4096 Fev 42 20:42 ..
 | **Turn-in directory** :  *ex04/*                 |
 | **Files to turn in**  :  **items_table.***      |
 | **Allowed functions** :  *All*                  |
+
+
+[items_table.py](/data_engineer/ex04/)
 
 - Créer la table ```items``` avec les mêmes colonnes que dans le fichier **"item.csv"**.
 

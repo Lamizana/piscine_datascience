@@ -76,28 +76,31 @@ def create_table(csv_path: str, table: str, cursor) -> None:
     - table : nom de la Table.
     """
 
-    # Lecture du fichier CSV pour détecter les colonnes :
-    with open(csv_path, 'r') as csv_file:
-        csv_reader = csv.reader(csv_file)
-        headers = next(csv_reader)
-    print(color(f"\nHeader :", 33, 4), headers)
+    try:
+        # Lecture du fichier CSV pour détecter les colonnes :
+        with open(csv_path, 'r') as csv_file:
+            csv_reader = csv.reader(csv_file)
+            headers = next(csv_reader)
+        print(color(f"\nHeader :", 33, 4), headers)
 
-    # Validation des colonnes par rapport aux types définis :
-    for col in headers:
-        if col not in COLUNM_TYPES:
-            raise ValueError(f"Aucun type défini pour la colonne '{col}'.")
-            
-    # Création de la table :
-    colunms_with_type = ", ".join([f"{col} {COLUNM_TYPES[col]}" for col in headers])
-    create_table_query = f"CREATE TABLE IF NOT EXISTS {table} ({colunms_with_type});"
-    cursor.execute(create_table_query)
+        # Validation des colonnes par rapport aux types définis :
+        for col in headers:
+            if col not in COLUNM_TYPES:
+                raise ValueError(f"Aucun type défini pour la colonne '{col}'.")
+                
+        # Création de la table :
+        colunms_with_type = ", ".join([f"{col} {COLUNM_TYPES[col]}" for col in headers])
+        create_table_query = f"CREATE TABLE IF NOT EXISTS {table} ({colunms_with_type});"
+        cursor.execute(create_table_query)
 
-    # Utiliser COPY pour insérer les données directement dans la table
-    with open(csv_path, 'r') as f:
-        next(f)
-        cursor.copy_from(f, table, sep=',', null='')
+        # Utiliser COPY pour insérer les données directement dans la table
+        with open(csv_path, 'r') as f:
+            next(f)
+            cursor.copy_from(f, table, sep=',', null='')
 
-    print(color(f"\n- Table '{table}' créé !", 32, 3))
+        print(color(f"\n- Table '{table}' créé !", 32, 3))
+    except Exception as e:
+        print(color(f"Erreur: {e}", 31, 3))
 
 
 # ---------------------------------------------------------------- #
