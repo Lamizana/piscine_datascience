@@ -315,7 +315,7 @@ exemple : ```data_2022_oct```
 | **Files to turn in**  :  **automatic_table.***  |
 | **Allowed functions** :  *All*                  |
 
-> [automatic_table.py](/data_engineer/ex03/automatic_table.py)
+> ***Lien*** : [automatic_table.py](/data_engineer/ex03/automatic_table.py)
 
 - Nous sommes à la fin du mois de février 2022, vous devriez être capable de créer des tableaux avec des données extraites d'un CSV.
 
@@ -357,8 +357,7 @@ drwxrwxr-x 5 eagle eagle 4096 Fev 42 20:42 ..
 | **Files to turn in**  :  **items_table.***      |
 | **Allowed functions** :  *All*                  |
 
-
-[items_table.py](/data_engineer/ex04/)
+> ***Lien*** : [items_table.py](/data_engineer/ex04/)
 
 - Créer la table ```items``` avec les mêmes colonnes que dans le fichier **"item.csv"**.
 
