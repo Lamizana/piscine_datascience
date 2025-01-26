@@ -23,12 +23,6 @@ DB_CONFIG = {
 }
 
 # Définition des types de colonnes
-"""
-product_id,category_id,        category_code,brand
-5712790,   1487580005268456192,              ,f.o.x
-5764655,1487580005411062528,,cnd
-"""
-
 COLUNM_TYPES = {
     "product_id": "INTEGER",
     "category_id": "INT8",
@@ -39,7 +33,6 @@ COLUNM_TYPES = {
 # Chemin vers le fichier CSV et nom de la table :
 CSV_PATH = "/home/lamizana/subject/item/items.csv"
 TABLE_NAME = "item"
-
 
 #####################################################################
 # Definitions locales de fonctions
