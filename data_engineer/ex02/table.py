@@ -148,6 +148,6 @@ def main() -> int:
 
 
 #####################################################################
-"""Programme principal"""
+# Programme principal
 if __name__ == "__main__":
     main()

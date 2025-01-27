@@ -1,7 +1,7 @@
 #####################################################################
 # Programme Python : First Table [Module data Warehouse 01]         #
 # Récupérez automatiquement tous les CSV du dossier customer et     #
-# les mettre dans une table 'clients'                               #                             #
+# les mettre dans une table 'customers'                              #
 #                                                                   #
 # Auteur : A.Lamizana, Angouleme, janvier-2025                      #
 # -*-coding:Utf-8 -*                                                #
@@ -9,22 +9,20 @@
 #####################################################################
 # Importations de fonctions externes :
 import os
-import sys
 import csv
 import psycopg2
 
 #####################################################################
 # Variables globales
 # Configuration de la connexion à PostgreSQL :
+DB_NAME = "piscineds"
 DB_CONFIG = {
     "host": "localhost",            # Adresse du serveur PostgreSQL
     "port": 5432,                   # Port PostgreSQL
-    "database": "piscineds",        # Nom de votre base de données
+    "database": DB_NAME,        # Nom de votre base de données
     "user": "alamizan",             # Nom de l'utilisateur PostgreSQL
     "password": "mysecretpassword"  # Mot de passe PostgreSQL
 }
-
-DB_NAME = "piscineds"
 
 # Définition des types de colonnes
 COLUNM_TYPES = {
@@ -37,8 +35,8 @@ COLUNM_TYPES = {
 }
 
 # Chemin vers le fichier CSV et nom de la table :
-CSV_PATH = "/home/lamizana/subject/customer2/"
-TABLE_NAME = "clients"
+CSV_PATH = "/home/lamizana/subject/customer2"
+TABLE_NAME = "customers"
 
 #####################################################################
 # Definitions locales de fonctions :
@@ -69,15 +67,29 @@ def connect_postgres(DB_CONFIG, db_name):
 
 
 # ---------------------------------------------------------------- #
-def csv_is_valid(path: str) -> bool:
+def csv_is_valid(path: str, filename: str) -> bool:
     """
-    Verifie la validite du fichier csv.
+    Verifie la validite du fichier csv et des ses colonnes.
     """
 
+    print(color("\n------------------------------------------------------", 36, 1))
+    print(color(f"- Fichier '{filename}': ", 32, 1), color(path, 32, 4))
     print(color("\nVerification du fichiers CSV...", 30, 4))
+
     try:
+        if filename[:8] != "data_202":
+            raise Exception ("Le fichier doit commencer par 'data_202*_***' ")
+
         with open(path, 'r', encoding='utf-8') as file:
-            reader = csv.reader(file)
+            csv_reader = csv.reader(file)
+            headers = next(csv_reader)
+            print(color(f"\nHeader :", 33, 4), headers)
+
+            # Validation des colonnes par rapport aux types définis :
+            for col in headers:
+                if col not in COLUNM_TYPES:
+                    raise ValueError(f"Aucun type défini pour la colonne '{col}'.")
+
     except Exception as e:
         print(color(f"\nErreur lors de la lecture du fichier CSV: {e}\n", 31, 3))
         return False
@@ -109,7 +121,7 @@ def create_table(table: str, cursor, conn) -> None:
         print(color(f"- Header :", 33, 4))
         print(color(f"\t- {colunms_with_type}", 33, 2))
         print(color(f"\nTables '{table}' créée avec succès !\n", 36, 1))
-
+        
     except Exception as e:
         print(color(f"Erreur: {e}", 31, 3))
 
@@ -131,42 +143,22 @@ def add_data_on_table(table: str, csv_directory: str, cursor, conn) -> None:
                 # Construire le chemin complet du fichier CSV
                 csv_file_path = os.path.join(csv_directory, filename)
 
-                print(color("\n------------------------------------------------------", 36, 1))
-                print(color(f"- Fichier '{filename}': ", 32, 1), color(csv_file_path, 32, 4))
-
-                if filename[:8] != "data_202":
-                    print(color(f"Erreur: Le fichier doit commencer par 'data_202*_***' ", 31, 3))
-                    continue
-
-                if csv_is_valid(csv_file_path) is False:
+                if csv_is_valid(csv_file_path, filename) is False:
                     continue
                 
-                # Lecture du fichier CSV pour détecter les colonnes :
-                with open(csv_file_path, 'r') as csv_file:
-                    csv_reader = csv.reader(csv_file)
-                    headers = next(csv_reader)
-                print(color(f"\nHeader :", 33, 4), headers)
-
-                # Validation des colonnes par rapport aux types définis :
-                for col in headers:
-                    if col not in COLUNM_TYPES:
-                        raise ValueError(f"Aucun type défini pour la colonne '{col}'.")
-
                 # Utiliser COPY pour insérer les données directement dans la table
                 with open(csv_file_path, 'r') as f:
                     next(f)
                     cursor.copy_from(f, table, sep=',', null='')
-
                 print(color(f"\nAjout des donnees {filename} reussi !", 34, 1))
         
-            # Commit des changements :
-            conn.commit()
-        
+                # Commit des changements :
+                conn.commit()
 
     except Exception as e:
         print(color(f"Erreur: {e}", 31, 3))
     else:
-        print(color(f"\nAjout de toutes les donnees '{csv_directory}' reussi !", 32, 1))
+        print(color(f"\nAjout de toutes les donnees du dossier'{csv_directory}' reussi !", 32, 1))
 
     
 # ---------------------------------------------------------------- #
@@ -202,6 +194,6 @@ def main() -> int:
 
 
 #####################################################################
-"""Programme principal"""
+# Programme principal
 if __name__ == "__main__":
     main()

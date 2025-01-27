@@ -9,18 +9,11 @@
 
 ### Sommaire
 
-
-- [Piscine datascience \[1\]](#piscine-datascience-1)
-  - [Data Warehouse: Gestion et comprehension ETL](#data-warehouse-gestion-et-comprehension-etl)
-    - [Index](#index)
-    - [Sommaire](#sommaire)
-  - [Règles générales](#règles-générales)
-  - [Introduction](#introduction)
-  - [Exercice 00](#exercice-00)
-    - [Show me your DB](#show-me-your-db)
-  - [Exercice 01](#exercice-01)
-    - [First table](#first-table)
-
+- [Règles générales](#règles-générales)
+- [Introduction](#introduction)
+- [Exercice 00: Show me your DB](#exercice-00)
+- [Exercice 01: First table](#exercice-01)
+- [Exercice 02: Remove duplicates](#exercice-02)
 
 ----------------------------------------------------------------------------
 
@@ -106,4 +99,35 @@ data source : __|
 
 > [customers_table.py](/data_warehouse/ex01/customers_table.py)
 
-- Réunir toutes les tables `data_202*_***` dans une table appelée ***clients***
+- Réunir toutes les tables `data_202*_***` dans une table appelée ***"customers"***.
+
+----------------------------------------------------------------------------
+
+## Exercice 02
+
+----------------------------------------------------------------------------
+
+### Remove duplicates
+
+|                                                     |
+| :------------------------------------------------   |
+| **Turn-in directory** :  *ex02/*                    |
+| **Files to turn in**  :  **remove_duplicates.***    |
+| **Allowed functions** :  *All*                      |
+
+> [remove_duplicates.py](/data_warehouse/ex02/remove_duplicates.py)
+
+- Supprimer les lignes en double dans la table ***"customers"***.
+
+> [!WARNING]
+> Parfois, le serveur envoie la même instruction à 1 seconde d'intervalle.
+> Vous devez donc également les supprimer.
+
+```sql
+DELETE FROM customers
+WHERE ctid NOT IN (
+    SELECT MIN(ctid)
+    FROM customers
+    GROUP BY  event_time, event_type, product_id, price, user_id, user_session
+);
+```
