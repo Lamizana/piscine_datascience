@@ -144,7 +144,7 @@ WHERE ctid NOT IN (
 |                                                     |
 | :------------------------------------------------   |
 | **Turn-in directory** :  *ex03/*                    |
-| **Files to turn in**  :  **fusion.***    |
+| **Files to turn in**  :  **fusion.***               |
 | **Allowed functions** :  *All*                      |
 
 > [remove_duplicates.py](/data_warehouse/ex02/remove_duplicates.py)
