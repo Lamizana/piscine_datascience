@@ -8,11 +8,12 @@
 #####################################################################
 # Importations de fonctions externes :
 import psycopg2
+from psycopg2 import errors, sql
 
 #####################################################################
 # Variables globales
 # Configuration de la connexion à PostgreSQL :
-DB_NAME = "piscineds"
+DB_NAME = "piscines"
 DB_CONFIG = {
     "host": "localhost",            # Adresse du serveur PostgreSQL
     "port": 5432,                   # Port PostgreSQL
@@ -48,16 +49,34 @@ def color(texte: str, couleur="37", style="0") -> str:
 # ---------------------------------------------------------------- #
 def connect_postgres(db_config: set, db_name: str):
     """
-    Connexion à la base de données PostgreSQL
+    Connexion à la base de données PostgreSQL et verification de la 
+    table 'customers'
     - conn: retourne un objet qui represente la connection active.
     """
 
     try:
-        conn = psycopg2.connect(**db_config)
-        print(color(f"Connexion à la base de données '{db_name}' réussie !\n", 36, 3))
-        return (conn)
+        # Connexion à la base de données :
+        connection = psycopg2.connect(**db_config)
+        cursor = connection.cursor()
+
+        # Vérification si la table 'customers' existe et contient des données :
+        query = sql.SQL(f"SELECT 1 FROM {TABLE_NAME} LIMIT 1")
+        cursor.execute(query)
+        result = cursor.fetchone()  # Récupère la première ligne
+
+        if result is None:
+            print(color(f"La table '{TABLE_NAME}' est vide. Fin de l'exécution."))
+            exit(1)
+
+        print(color(f"Connexion à la base de données '{db_name}' réussie !", 36, 3))
+        print(color(f"La table '{TABLE_NAME}' contient des données. Poursuite de l'exécution.\n", 36, 3))
+        return (connection)
+
+    except errors.UndefinedTable:
+        print(color(f"Erreur : La table '{TABLE_NAME}' n'existe pas. Fin de l'exécution.", 31, 3))
+        exit(1)
     except psycopg2.Error as e:
-        print(color(f"Erreur lors de la connexion à PostgreSQL : {e}", 31, 3))
+        print(color(f"Erreur lors de la connexion ou de l'exécution SQL : {e}", 31, 3))
         exit(1)
 
 
@@ -68,13 +87,13 @@ def remove_doublon(conn, cursor) -> None:
     """
 
     colunms_str = ", ".join([f"{col}" for col in COLUNM])
-    print("Verification des colonnes: ", colunms_str)
+    print("Verification des colonnes: ", color(colunms_str, 30,2))
 
     str_1 = f"DELETE FROM {TABLE_NAME} WHERE ctid NOT IN (SELECT MIN(ctid) "
     str_2 = f"FROM {TABLE_NAME} GROUP BY {colunms_str});"
     
     rm_doublon = str_1 + str_2
-    print("\nScript a executer:", rm_doublon)
+    print("\nScript a executer:", color(rm_doublon, 33, 3))
 
     cursor.execute(rm_doublon)
 
@@ -102,10 +121,8 @@ def main() -> int:
     remove_doublon(conn, cursor)
 
     # Fermeture des connexions :
-    if cursor:
-        cursor.close()
-    if conn:
-        conn.close()
+    cursor.close()
+    conn.close()
 
     print(color("\n\t-------------------------", 35, 1))
     print(color("\tFERMETURE DU PROGRAMME !!", 35, 1))
