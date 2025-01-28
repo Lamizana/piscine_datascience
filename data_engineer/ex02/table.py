@@ -10,6 +10,7 @@
 import sys
 import csv
 import psycopg2
+import os
 
 #####################################################################
 # Variables globales
@@ -59,12 +60,12 @@ def csv_is_valid() -> bool:
     try:
         if len(sys.argv) != 2:
             raise ValueError("2 args necessaires, le programme et le chemin du fichier")
-        with open(sys.argv[1], 'r', encoding='utf-8') as file:
-            reader = csv.reader(file)
+        if not os.path.exists(sys.argv[1]):
+            raise Exception("Le fichier ne peut etre lue.")
     except Exception as e:
         print(color(f"\nErreur lors de la lecture du fichier CSV: {e}\n", 31, 3))
         return False
-    
+
     print(color("\t- Le fichier CSV est lisible.", 32, 3))
     return (True)
 
@@ -82,19 +83,19 @@ def create_table(csv_path: str, table: str) -> None:
         # Connexion à PostgreSQL :
         conn = psycopg2.connect(**DB_CONFIG)
         cursor = conn.cursor()
-        print(color(f"\t- Connexion Postgres reussi", 33, 3))
+        print(color("\t- Connexion Postgres reussi", 33, 3))
 
         # Lecture du fichier CSV pour détecter les colonnes :
         with open(csv_path, 'r') as csv_file:
             csv_reader = csv.reader(csv_file)
             headers = next(csv_reader)
-        print(color(f"\nHeader :", 33, 4), headers)
+        print(color("\nHeader :", 33, 4), headers)
 
         # Validation des colonnes par rapport aux types définis :
         for col in headers:
             if col not in COLUNM_TYPES:
                 raise ValueError(f"Aucun type défini pour la colonne '{col}'.")
-            
+
         # Création de la table :
         colunms_with_type = ", ".join([f"{col} {COLUNM_TYPES[col]}" for col in headers])
         create_table_query = f"CREATE TABLE IF NOT EXISTS {table} ({colunms_with_type});"
@@ -118,7 +119,7 @@ def create_table(csv_path: str, table: str) -> None:
             cursor.close()
         if conn:
             conn.close()
-    
+
 
 # ---------------------------------------------------------------- #
 def main() -> int:
@@ -131,8 +132,7 @@ def main() -> int:
     print(color("\t-------------------------", 35, 1), "\n")
 
     if csv_is_valid() is False:
-        return(1)
-
+        return (1)
 
     table_name = sys.argv[1].split("/")
     table_name = str(table_name[-1][:-4])

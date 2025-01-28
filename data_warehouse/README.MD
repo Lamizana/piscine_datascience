@@ -14,6 +14,7 @@
 - [Exercice 00: Show me your DB](#exercice-00)
 - [Exercice 01: First table](#exercice-01)
 - [Exercice 02: Remove duplicates](#exercice-02)
+- [Exercice 03: Fusion](#exercice-03)
 
 ----------------------------------------------------------------------------
 
@@ -131,3 +132,21 @@ WHERE ctid NOT IN (
     GROUP BY  event_time, event_type, product_id, price, user_id, user_session
 );
 ```
+
+----------------------------------------------------------------------------
+
+## Exercice 03
+
+----------------------------------------------------------------------------
+
+### Fusion
+
+|                                                     |
+| :------------------------------------------------   |
+| **Turn-in directory** :  *ex03/*                    |
+| **Files to turn in**  :  **fusion.***    |
+| **Allowed functions** :  *All*                      |
+
+> [remove_duplicates.py](/data_warehouse/ex02/remove_duplicates.py)
+
+- Combiner les tables ***"customers"*** avec les ***"items"*** de la table ***"customers"***.
