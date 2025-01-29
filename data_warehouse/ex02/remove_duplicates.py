@@ -13,7 +13,7 @@ from psycopg2 import errors, sql
 #####################################################################
 # Variables globales
 # Configuration de la connexion à PostgreSQL :
-DB_NAME = "piscines"
+DB_NAME = "piscineds"
 DB_CONFIG = {
     "host": "localhost",            # Adresse du serveur PostgreSQL
     "port": 5432,                   # Port PostgreSQL

@@ -147,6 +147,6 @@ WHERE ctid NOT IN (
 | **Files to turn in**  :  **fusion.***               |
 | **Allowed functions** :  *All*                      |
 
-> [remove_duplicates.py](/data_warehouse/ex02/remove_duplicates.py)
+> [fusion.py](/data_warehouse/ex03/fusion.py)
 
 - Combiner les tables ***"customers"*** avec les ***"items"*** de la table ***"customers"***.

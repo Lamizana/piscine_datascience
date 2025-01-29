@@ -7,12 +7,22 @@
 #                                       https://github.com/Lamizana #
 #####################################################################
 # Importations de fonctions externes :
-
+import psycopg2
+from psycopg2 import errors, sql
 
 #####################################################################
 # Variables globales :
+# Configuration de la connexion à PostgreSQL :
+DB_NAME = "piscineds"
+DB_CONFIG = {
+    "host": "localhost",            # Adresse du serveur PostgreSQL
+    "port": 5432,                   # Port PostgreSQL
+    "database": DB_NAME,        # Nom de votre base de données
+    "user": "alamizan",             # Nom de l'utilisateur PostgreSQL
+    "password": "mysecretpassword"  # Mot de passe PostgreSQL
+}
 
-
+TABLE_NAME = "customers"
 
 #####################################################################
 # Definitions locales de fonctions :
@@ -26,6 +36,76 @@ def color(texte: str, couleur="37", style="0") -> str:
 
 
 # ---------------------------------------------------------------- #
+def connect_postgres(db_config: set, db_name: str):
+    """
+    Connexion à la base de données PostgreSQL et verification de la 
+    table 'customers'
+    - conn: retourne un objet qui represente la connection active.
+    """
+
+    try:
+        # Connexion à la base de données :
+        connection = psycopg2.connect(**db_config)
+        cursor = connection.cursor()
+
+        # Vérification si la table 'customers' existe et contient des données :
+        query = sql.SQL(f"SELECT 1 FROM {TABLE_NAME} LIMIT 1")
+        cursor.execute(query)
+        result = cursor.fetchone()  # Récupère la première ligne
+
+        if result is None:
+            print(color(f"La table '{TABLE_NAME}' est vide. Fin de l'exécution."))
+            exit(1)
+
+        print(color(f"Connexion à la base de données '{db_name}' réussie !", 36, 3))
+        print(color(f"La table '{TABLE_NAME}' contient des données. Poursuite de l'exécution.\n", 36, 3))
+        return (connection)
+
+    except errors.UndefinedTable:
+        print(color(f"Erreur : La table '{TABLE_NAME}' n'existe pas. Fin de l'exécution.", 31, 3))
+        exit(1)
+    except psycopg2.Error as e:
+        print(color(f"Erreur lors de la connexion ou de l'exécution SQL : {e}", 31, 3))
+        exit(1)
+
+# ---------------------------------------------------------------- #
+def join_table(conn, cursor) -> None:
+    """
+    """
+
+    # script psql: Ajout de nouvelle colonne :
+    add_colunm = """
+    ALTER TABLE customers
+    ADD COLUMN category_id INT8,
+    ADD COLUMN category_code TEXT,
+    ADD COLUMN brand VARCHAR(255);
+    """
+
+    # script psql: Fusion de deux tables par rapport a product_id :
+    update_table = """
+    UPDATE customers
+    SET
+        category_id = items.category_id,
+        category_code = items.category_code,
+        brand = items.brand
+    FROM items
+    WHERE customers.product_id = items.product_id;
+    """
+
+    try:
+        # Execute les requetes :
+        print("Exécution de la requête SQL...")
+        cursor.execute(add_colunm)
+        cursor.execute(update_table)
+        print("Requête exécutée avec succès !")
+
+        # Validation des modifications
+        conn.commit()
+    except Exception as e:
+        print(color(f"Erreur lors de la fusion des tables: {e}", 31, 3))
+
+
+# ---------------------------------------------------------------- #
 def main() -> int:
     """
     Fonction programme principal.
@@ -34,6 +114,16 @@ def main() -> int:
     print(color("\n\t-------------------------------", 35, 1))
     print(color("\tLANCEMENT DU PROGRAMME Fusion!!", 35, 1))
     print(color("\t-------------------------------", 35, 1), "\n")
+
+    # Connexion à PostgreSQL :
+    conn = connect_postgres(DB_CONFIG, DB_NAME)
+    cursor = conn.cursor()
+
+    join_table(conn, cursor)
+
+    # Fermeture des connexions :
+    cursor.close()
+    conn.close()
 
     print(color("\n\t-------------------------", 35, 1))
     print(color("\tFERMETURE DU PROGRAMME !!", 35, 1))

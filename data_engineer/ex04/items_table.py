@@ -33,7 +33,7 @@ COLUNM_TYPES = {
 
 # Chemin vers le fichier CSV et nom de la table :
 CSV_PATH = "/home/lamizana/subject/item/items.csv"
-TABLE_NAME = "item"
+TABLE_NAME = "items"
 
 
 #####################################################################
