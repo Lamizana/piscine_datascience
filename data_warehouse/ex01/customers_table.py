@@ -74,7 +74,6 @@ def connect_postgres(DB_CONFIG, db_name):
         exit(1)
 
 
-
 # ---------------------------------------------------------------- #
 def create_table(table: str, cursor, conn) -> None:
     """
@@ -99,19 +98,6 @@ def create_table(table: str, cursor, conn) -> None:
     print(color(f"\nTables '{table}' créée avec succès !\n", 36, 1))
         
 
-# ---------------------------------------------------------------- #
-def add_data_on_table(table: str, cursor, conn) -> None:
-    """
-    Réunir toutes les tables 'data_202*_***' dans une table.
-    - table: nom de la table
-    - csv_drectory : chemin du dossier.
-    """
-
-    print("Script psql:")
-    print(color(ADD_TABLE, 33, 4))
-    cursor.execute(ADD_TABLE)
-    conn.commit()
-
 
 # ---------------------------------------------------------------- #
 def main() -> int:
@@ -132,7 +118,9 @@ def main() -> int:
         create_table(TABLE_NAME, cursor, conn)
 
         # Ajout des tables dans la table customers :
-        add_data_on_table(TABLE_NAME, cursor, conn)
+        print("- Script psql:", color(ADD_TABLE, 33, 4))
+        cursor.execute(ADD_TABLE)
+        conn.commit()
 
     except Exception as e:
         print(color(f"Erreur: {e}", 31, 3))
