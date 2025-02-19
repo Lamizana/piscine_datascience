@@ -261,7 +261,7 @@ sudo snap install pgadmin4
 | **Files to turn in**  :  **table*.**|
 | **Allowed functions** :  *All*      |
 
-> [table.py](/data_engineer/ex02/table.py)
+> ***Lien*** : [table.py](/data_engineer/ex02/table.py)
 
 **Créer une table postgres** en utilisant les données d'un CSV provenant du dossier ```customer```.
 

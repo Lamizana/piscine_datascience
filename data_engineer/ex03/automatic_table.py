@@ -35,7 +35,7 @@ COLUNM_TYPES = {
     "user_session": "VARCHAR(50)"
 }
 
-CSV_PATH = "/home/lamizana/subject/customer"
+CSV_PATH = "/home/alex/Documents/subject/customer"
 
 
 #####################################################################

@@ -32,7 +32,7 @@ COLUNM_TYPES = {
 }
 
 # Chemin vers le fichier CSV et nom de la table :
-CSV_PATH = "/home/lamizana/subject/item/items.csv"
+CSV_PATH = "/home/alex/Documents/subject/item/item.csv"
 TABLE_NAME = "items"
 
 
@@ -134,10 +134,10 @@ def main() -> int:
 
     table_name = sys.argv[1].split("/")
     table_name = str(table_name[-1][:-4])
-    print(color(f"\nCreation de la Table '{table_name}':", 33, 4))
+    print(color(f"\nCreation de la Table '{TABLE_NAME}':", 33, 4))
     print(color(f"\t- Emplacement: {sys.argv[1]}...", 33, 3))
 
-    create_table(sys.argv[1], table_name)
+    create_table(sys.argv[1], TABLE_NAME)
 
     print(color("\n\t-------------------------", 35, 1))
     print(color("\tFERMETURE DU PROGRAMME !!", 35, 1))
