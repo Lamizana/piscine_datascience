@@ -97,10 +97,9 @@ def join_table(conn, cursor) -> None:
         print("Exécution de la requête SQL...")
         cursor.execute(add_colunm)
         cursor.execute(update_table)
+        conn.commit()
         print("Requête exécutée avec succès !")
 
-        # Validation des modifications
-        conn.commit()
     except Exception as e:
         print(color(f"Erreur lors de la fusion des tables: {e}", 31, 3))
 
