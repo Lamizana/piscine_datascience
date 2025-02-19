@@ -8,8 +8,6 @@
 #                                       https://github.com/Lamizana #
 #####################################################################
 # Importations de fonctions externes :
-import os
-import csv
 import psycopg2
 
 #####################################################################
@@ -34,9 +32,20 @@ COLUNM_TYPES = {
     "user_session": "VARCHAR(50)"
 }
 
-# Chemin vers le fichier CSV et nom de la table :
-CSV_PATH = "/home/lamizana/subject/customer2"
 TABLE_NAME = "customers"
+
+ADD_TABLE = f"""
+INSERT INTO {TABLE_NAME}
+SELECT * FROM data_2022_oct
+UNION ALL
+SELECT * FROM data_2022_nov
+UNION ALL
+SELECT * FROM data_2022_dec
+UNION ALL
+SELECT * FROM data_2023_jan
+UNION ALL
+SELECT * FROM data_2023_feb;
+"""
 
 #####################################################################
 # Definitions locales de fonctions :
@@ -46,7 +55,6 @@ def color(texte: str, couleur="37", style="0") -> str:
     - couleur : Code couleur de 30 a 47 (ex: '31' pour rouge)
     - style : Style du texte de 0 a 5(ex: '1' pour gras)
     """
-
     return (f"\033[{style};{couleur}m{texte}\033[0m")
 
 
@@ -66,37 +74,6 @@ def connect_postgres(DB_CONFIG, db_name):
         exit(1)
 
 
-# ---------------------------------------------------------------- #
-def csv_is_valid(path: str, filename: str) -> bool:
-    """
-    Verifie la validite du fichier csv et des ses colonnes.
-    """
-
-    print(color("\n------------------------------------------------------", 36, 1))
-    print(color(f"- Fichier '{filename}': ", 32, 1), color(path, 32, 4))
-    print(color("\nVerification du fichiers CSV...", 30, 4))
-
-    try:
-        if filename[:8] != "data_202":
-            raise Exception ("Le fichier doit commencer par 'data_202*_***' ")
-
-        with open(path, 'r', encoding='utf-8') as file:
-            csv_reader = csv.reader(file)
-            headers = next(csv_reader)
-            print(color(f"\nHeader :", 33, 4), headers)
-
-            # Validation des colonnes par rapport aux types définis :
-            for col in headers:
-                if col not in COLUNM_TYPES:
-                    raise ValueError(f"Aucun type défini pour la colonne '{col}'.")
-
-    except Exception as e:
-        print(color(f"\nErreur lors de la lecture du fichier CSV: {e}\n", 31, 3))
-        return False
-    
-    print(color("\t- Le fichier CSV est lisible.", 32, 3))
-    return (True)
-
 
 # ---------------------------------------------------------------- #
 def create_table(table: str, cursor, conn) -> None:
@@ -107,84 +84,60 @@ def create_table(table: str, cursor, conn) -> None:
     - cursor : Pour faire des requetes.
     """
 
-    try:
-        headers = [col for col in COLUNM_TYPES]
+    headers = [col for col in COLUNM_TYPES]
         
-        # Création de la table :
-        colunms_with_type = ", ".join([f"{col} {COLUNM_TYPES[col]}" for col in headers])
-        create_table_query = f"CREATE TABLE IF NOT EXISTS {TABLE_NAME} ({colunms_with_type});"
-        cursor.execute(create_table_query)
+    # Création de la table :
+    colunms_with_type = ", ".join([f"{col} {COLUNM_TYPES[col]}" for col in headers])
+    create_table_query = f"CREATE TABLE IF NOT EXISTS {TABLE_NAME} ({colunms_with_type});"
+    cursor.execute(create_table_query)
 
-        # Commit des changements :
-        conn.commit()
+    # Commit des changements :
+    conn.commit()
 
-        print(color(f"- Header :", 33, 4))
-        print(color(f"\t- {colunms_with_type}", 33, 2))
-        print(color(f"\nTables '{table}' créée avec succès !\n", 36, 1))
+    print(color(f"- Header :", 33, 4))
+    print(color(f"\t- {colunms_with_type}", 33, 2))
+    print(color(f"\nTables '{table}' créée avec succès !\n", 36, 1))
         
-    except Exception as e:
-        print(color(f"Erreur: {e}", 31, 3))
-
 
 # ---------------------------------------------------------------- #
-def add_data_on_table(table: str, csv_directory: str, cursor, conn) -> None:
+def add_data_on_table(table: str, cursor, conn) -> None:
     """
     Réunir toutes les tables 'data_202*_***' dans une table.
     - table: nom de la table
     - csv_drectory : chemin du dossier.
     """
 
-    try:
-        print(color(f"csv_directory : ", 36, 1), color(CSV_PATH, 33, 4))
-        
-        # Parcourir tous les fichiers dans le dossier CSV
-        for filename in os.listdir(csv_directory):
-            if filename.endswith('.csv'):
-                # Construire le chemin complet du fichier CSV
-                csv_file_path = os.path.join(csv_directory, filename)
+    print("Script psql:")
+    print(color(ADD_TABLE, 33, 4))
+    cursor.execute(ADD_TABLE)
+    conn.commit()
 
-                if csv_is_valid(csv_file_path, filename) is False:
-                    continue
-                
-                # Utiliser COPY pour insérer les données directement dans la table
-                with open(csv_file_path, 'r') as f:
-                    next(f)
-                    cursor.copy_from(f, table, sep=',', null='')
-                print(color(f"\nAjout des donnees {filename} reussi !", 34, 1))
-        
-                # Commit des changements :
-                conn.commit()
 
-    except Exception as e:
-        print(color(f"Erreur: {e}", 31, 3))
-    else:
-        print(color(f"\nAjout de toutes les donnees du dossier'{csv_directory}' reussi !", 32, 1))
-
-    
 # ---------------------------------------------------------------- #
 def main() -> int:
     """
     Fonction programme principal.
     """
 
-    print(color("\n\t---------------------------------------", 35, 1))
-    print(color("\tLANCEMENT DU PROGRAMME : First Table !!", 35, 1))
-    print(color("\t---------------------------------------", 35, 1), "\n")
+    print(color("\n\t-------------------------------------", 35, 1))
+    print(color("\tLANCEMENT DU PROGRAMME : Customers !!", 35, 1))
+    print(color("\t-------------------------------------", 35, 1), "\n")
 
     # Connexion à PostgreSQL :
     conn = connect_postgres(DB_CONFIG, DB_NAME)
     cursor = conn.cursor()
 
-    # Creation de la table clients :
-    create_table(TABLE_NAME, cursor, conn)
+    try:
+        # Creation de la table clients :
+        create_table(TABLE_NAME, cursor, conn)
 
-    # Ajout des fichier csv dans la table clients
-    add_data_on_table(TABLE_NAME, CSV_PATH, cursor, conn)
+        # Ajout des tables dans la table customers :
+        add_data_on_table(TABLE_NAME, cursor, conn)
 
-    # Fermeture des connexions :
-    if cursor:
+    except Exception as e:
+        print(color(f"Erreur: {e}", 31, 3))
+    finally:
         cursor.close()
-    if conn:
         conn.close()
 
     print(color("\n\t-------------------------", 35, 1))
