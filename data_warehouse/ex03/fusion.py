@@ -60,6 +60,11 @@ CLEAN = f"""
 DROP TABLE items_tmp;
 """
 
+TEST = """
+
+"""
+
+
 #####################################################################
 # Definitions locales de fonctions :
 def color(texte: str, couleur="37", style="0") -> str:
