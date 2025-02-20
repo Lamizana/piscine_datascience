@@ -57,7 +57,7 @@ WHERE c.product_id = i.product_id;
 """
 
 CLEAN = f"""
-DROP TABLE item_tmp;
+DROP TABLE items_tmp;
 """
 
 #####################################################################
@@ -113,9 +113,16 @@ def join_table(conn, cursor) -> None:
     try:
         # Execute les requetes :
         print("Exécution de la requête SQL...")
+        print("- Script a executer:", color(ITEM_TMP, 33, 3))
         cursor.execute(ITEM_TMP)
+
+        print("- Script a executer:", color(ALTER_TABLE, 33, 3))
         cursor.execute(ALTER_TABLE)
+
+        print("- Script a executer:", color(UPDATE, 33, 3))
         cursor.execute(UPDATE)
+
+        print("- Script a executer:", color(CLEAN, 33, 3))
         cursor.execute(CLEAN)
 
         conn.commit()

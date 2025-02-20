@@ -24,15 +24,6 @@ DB_CONFIG = {
 
 TABLE_NAME = "customers"
 
-# # Script psql our supprimer les doublons :
-# DOUBLON = f"""
-# DELETE FROM {TABLE_NAME} 
-# WHERE ctid NOT IN (
-#     SELECT MIN(ctid) 
-#     FROM {TABLE_NAME}
-#     GROUP BY event_time, event_type, product_id, price, user_id, user_session);
-# """
-
 DOUBLON = f"""
 WITH duplicate_cte AS (
     SELECT ctid
@@ -43,8 +34,9 @@ WITH duplicate_cte AS (
     ) subquery
     WHERE row_num > 1
 )
-DELETE FROM {TABLE_NAME}
-WHERE ctid IN (SELECT ctid FROM duplicate_cte);
+DELETE FROM {TABLE_NAME} t
+USING duplicate_cte d
+WHERE t.ctid = d.ctid;
 """
 
 #####################################################################
