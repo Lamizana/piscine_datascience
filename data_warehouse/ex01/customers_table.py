@@ -47,6 +47,7 @@ UNION ALL
 SELECT * FROM data_2023_feb;
 """
 
+
 #####################################################################
 # Definitions locales de fonctions :
 def color(texte: str, couleur="37", style="0") -> str:
@@ -89,8 +90,6 @@ def create_table(table: str, cursor, conn) -> None:
     colunms_with_type = ", ".join([f"{col} {COLUNM_TYPES[col]}" for col in headers])
     create_table_query = f"CREATE TABLE IF NOT EXISTS {TABLE_NAME} ({colunms_with_type});"
     cursor.execute(create_table_query)
-
-    # Commit des changements :
     conn.commit()
 
     print(color(f"- Header :", 33, 4))
@@ -118,7 +117,7 @@ def main() -> int:
         create_table(TABLE_NAME, cursor, conn)
 
         # Ajout des tables dans la table customers :
-        print("- Script psql:", color(ADD_TABLE, 33, 4))
+        print("- Script psql:", color(ADD_TABLE, 33, 3))
         cursor.execute(ADD_TABLE)
         conn.commit()
 

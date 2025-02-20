@@ -39,11 +39,12 @@ WITH duplicate_cte AS (
     FROM (
         SELECT ctid,
             ROW_NUMBER() OVER (PARTITION BY event_time, event_type, product_id, price, user_id, user_session ORDER BY ctid) AS row_num
-        FROM customers
+        FROM {TABLE_NAME}
     ) subquery
     WHERE row_num > 1
 )
-DELETE FROM customers WHERE ctid IN (SELECT ctid FROM duplicate_cte);
+DELETE FROM {TABLE_NAME}
+WHERE ctid IN (SELECT ctid FROM duplicate_cte);
 """
 
 #####################################################################

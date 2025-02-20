@@ -24,6 +24,42 @@ DB_CONFIG = {
 
 TABLE_NAME = "customers"
 
+ITEM_TMP = """
+CREATE TABLE items_tmp AS
+SELECT
+    product_id,
+    COALESCE(MAX(category_id), NULL) AS category_id,
+    COALESCE(MAX(category_code), NULL) AS category_code,
+    COALESCE(MAX(brand), NULL) AS brand
+FROM
+    items
+GROUP BY
+    product_id;
+"""
+
+# script psql: Ajout de nouvelle colonne :
+ALTER_TABLE = f"""
+ALTER TABLE {TABLE_NAME}
+ADD COLUMN category_id INT8,
+ADD COLUMN category_code TEXT,
+ADD COLUMN brand VARCHAR(255);
+"""
+
+# script psql: Fusion de deux tables par rapport a product_id :
+UPDATE = f"""
+UPDATE {TABLE_NAME} c
+SET
+    category_id = i.category_id,
+    category_code = i.category_code,
+    brand = i.brand
+FROM items_tmp i
+WHERE c.product_id = i.product_id;
+"""
+
+CLEAN = f"""
+DROP TABLE item_tmp;
+"""
+
 #####################################################################
 # Definitions locales de fonctions :
 def color(texte: str, couleur="37", style="0") -> str:
@@ -71,32 +107,17 @@ def connect_postgres(db_config: set, db_name: str):
 # ---------------------------------------------------------------- #
 def join_table(conn, cursor) -> None:
     """
-    """
-
-    # script psql: Ajout de nouvelle colonne :
-    add_colunm = """
-    ALTER TABLE customers
-    ADD COLUMN category_id INT8,
-    ADD COLUMN category_code TEXT,
-    ADD COLUMN brand VARCHAR(255);
-    """
-
-    # script psql: Fusion de deux tables par rapport a product_id :
-    update_table = """
-    UPDATE customers
-    SET
-        category_id = items.category_id,
-        category_code = items.category_code,
-        brand = items.brand
-    FROM items
-    WHERE customers.product_id = items.product_id;
+    Fusion des tables customers et items.
     """
 
     try:
         # Execute les requetes :
         print("Exécution de la requête SQL...")
-        cursor.execute(add_colunm)
-        cursor.execute(update_table)
+        cursor.execute(ITEM_TMP)
+        cursor.execute(ALTER_TABLE)
+        cursor.execute(UPDATE)
+        cursor.execute(CLEAN)
+
         conn.commit()
         print("Requête exécutée avec succès !")
 
