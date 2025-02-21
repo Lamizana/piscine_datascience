@@ -25,19 +25,22 @@ DB_CONFIG = {
 TABLE_NAME = "customers"
 
 DOUBLON = f"""
-WITH duplicate_cte AS (
+WITH close_duplicates AS (
     SELECT ctid
     FROM (
         SELECT ctid,
-            ROW_NUMBER() OVER (PARTITION BY event_time, event_type, product_id, price, user_id, user_session ORDER BY ctid) AS row_num
+               event_time,
+               LAG(event_time) OVER (
+                   PARTITION BY event_type, product_id, price, user_id, user_session
+                   ORDER BY event_time
+               ) AS previous_time
         FROM {TABLE_NAME}
     ) subquery
-    WHERE row_num > 1
+    WHERE event_time - previous_time <= INTERVAL '1 second'
 )
-DELETE FROM {TABLE_NAME} t
-USING duplicate_cte d
-WHERE t.ctid = d.ctid;
+DELETE FROM {TABLE_NAME} WHERE ctid IN (SELECT ctid FROM close_duplicates);
 """
+
 
 #####################################################################
 # Definitions locales de fonctions
