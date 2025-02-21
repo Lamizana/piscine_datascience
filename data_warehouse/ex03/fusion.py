@@ -60,10 +60,6 @@ CLEAN = f"""
 DROP TABLE items_tmp;
 """
 
-TEST = """
-
-"""
-
 
 #####################################################################
 # Definitions locales de fonctions :
