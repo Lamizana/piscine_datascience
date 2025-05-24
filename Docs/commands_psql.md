@@ -29,12 +29,29 @@ postgres=#
 
 ## Commandes principales
 
-### Commandes de base
+Commandes PostgrSQL
+
+```sql
+\dt                     -- Lister les tables dans la base.
+\d                      -- Lister toutes les relations.
+\d nom_de_la_table      -- Afficher les colonnes d'une table .
+\du                     -- Liste tous les utilisateurs.
+```
+
+### 📂 Bases de données
 
 ```sql
 \l                      -- Afficher les bases de données.
 \c nom_de_la_base       -- Se connecter à une base de données spécifique.
+```
+
+### 📁 Tables et schémas
+
+```sql
 \dt                     -- Lister les tables dans la base.
+\dt nom_du_schéma.*     -- Lister les tables d’un schéma.
+\dn                     -- Lister les schemas.
+\d                      -- Lister toutes les relations.
 \d nom_de_la_table      -- Afficher les colonnes d'une table .
 \du                     -- Liste tous les utilisateurs.
 ```
@@ -51,6 +68,24 @@ postgres=#
 
   ```sql
   DROP DATABASE nom_base;
+  ```
+
+- Lire les 10 premières lignes d’une table :
+
+  ```sql
+  SELECT * FROM nom_de_table LIMIT 10;
+  ```
+
+- Lire des colonnes spécifiques avec tri :
+
+  ```sql
+  SELECT id, nom FROM nom_de_table ORDER BY nom ASC LIMIT 5;
+  ```
+
+- Compter le nombre de lignes :
+
+  ```sql
+  SELECT COUNT(*) FROM nom_de_table;
   ```
 
 ### Gestion des utilisateurs

@@ -24,19 +24,6 @@ DB_CONFIG = {
 
 TABLE_NAME = "customers"
 
-ITEM_TMP = """
-CREATE TABLE items_tmp AS
-SELECT
-    product_id,
-    COALESCE(MAX(category_id), NULL) AS category_id,
-    COALESCE(MAX(category_code), NULL) AS category_code,
-    COALESCE(MAX(brand), NULL) AS brand
-FROM
-    items
-GROUP BY
-    product_id;
-"""
-
 # script psql: Ajout de nouvelle colonne :
 ALTER_TABLE = f"""
 ALTER TABLE {TABLE_NAME}
@@ -52,12 +39,8 @@ SET
     category_id = i.category_id,
     category_code = i.category_code,
     brand = i.brand
-FROM items_tmp i
+FROM items i
 WHERE c.product_id = i.product_id;
-"""
-
-CLEAN = f"""
-DROP TABLE items_tmp;
 """
 
 #####################################################################
@@ -113,8 +96,6 @@ def join_table(conn, cursor) -> None:
     try:
         # Execute les requetes :
         print("Exécution de la requête SQL...")
-        print("- Script a executer:", color(ITEM_TMP, 33, 3))
-        cursor.execute(ITEM_TMP)
 
         print("- Script a executer:", color(ALTER_TABLE, 33, 3))
         cursor.execute(ALTER_TABLE)
@@ -122,8 +103,8 @@ def join_table(conn, cursor) -> None:
         print("- Script a executer:", color(UPDATE, 33, 3))
         cursor.execute(UPDATE)
 
-        print("- Script a executer:", color(CLEAN, 33, 3))
-        cursor.execute(CLEAN)
+        # print("- Script a executer:", color(CLEAN, 33, 3))
+        # cursor.execute(CLEAN)
 
         conn.commit()
         print("Requête exécutée avec succès !")

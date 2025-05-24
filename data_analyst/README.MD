@@ -11,7 +11,7 @@
 
 - [Règles générales](#règles-générales)
 - [Introduction](#introduction)
-- [Exercice 00: Show me your DB](#exercice-00)
+- [Exercice 00 : American apple Pie](#exercice-00)
 - [Exercice 01: First table](#exercice-01)
 - [Exercice 02: Remove duplicates](#exercice-02)
 - [Exercice 03: Fusion](#exercice-03)
@@ -54,28 +54,28 @@ après l'évaluation par les pairs.
 
 ## Introduction
 
-L'***ETL***, qui signifie *extraction, transformation et chargement*, est un processus d'intégration des données qui consiste à combine des données provenant de plusieurs sources de données en un magasin de données unique et cohérent qui est chargé dans un entrepôt de données.
+Le rôle du data analyst est de comprendre les données passées et présentes, de faire des graphiques pour expliquer aux équipes les " chiffres " (reporting), et d'être force de proposition pour apporter des solutions, de créer des outils d'aide à la décision.
+Ils utilisent souvent des outils tels que techno R, Excel, Power BI, Jupyter Notebook>
+A vous de trouver les outils qui vous conviennent. Vous êtes libre d'utiliser la langue de votre choix pour ce module.
 
-```
-data source : __
-                |__ ETL --> Data Warehouse
-data source : __|
-```
+> [!NOTE]
+> Attention à cette "piscine". Même si vous parvenez à valider un module,vous risquez d'être bloqué plus tard si vous n'avez pas nettoyé ou stocké vos données correctement.
 
-> [!WARNING]
-> Attention à cette "piscine". Même si vous parvenez à valider un module
-> module, vous risquez d'être bloqué plus tard si vous n'avez pas nettoyé ou stocké
-> ou stocké vos données correctement.
+Tous les graphiques ont été réalisés sans les données de février, vous devez les refaire avec les nouvelles données.
 
-----------------------------------------------------------------------------
-
-## Exercice 00
+Connexion a la base de donnees piscineds :
 
 ```bash
 $> psql -U your_login -d piscineds -h localhost -W
 mysecretpassword
 piscineds=#
 ```
+
+----------------------------------------------------------------------------
+
+## Exercice 00
+
+
 
 ----------------------------------------------------------------------------
 

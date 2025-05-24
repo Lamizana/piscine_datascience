@@ -32,7 +32,7 @@ COLUNM_TYPES = {
     "user_session": "VARCHAR(50)"
 }
 
-TABLE_NAME = "customers_test"
+TABLE_NAME = "customers"
 
 ADD_TABLE = f"""
 INSERT INTO {TABLE_NAME}
