@@ -150,3 +150,5 @@ WHERE ctid NOT IN (
 > [fusion.py](/data_warehouse/ex03/fusion.py)
 
 - Combiner les tables ***"customers"*** avec les ***"items"*** de la table ***"customers"***.
+
+Commandes :
