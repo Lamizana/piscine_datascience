@@ -12,7 +12,7 @@
 - [Règles générales](#règles-générales)
 - [Introduction](#introduction)
 - [Exercice 00 : American apple Pie](#exercice-00)
-- [Exercice 01: First table](#exercice-01)
+- [Exercice 01 : initial data exploration](#exercice-01)
 - [Exercice 02: Remove duplicates](#exercice-02)
 - [Exercice 03: Fusion](#exercice-03)
 
@@ -75,38 +75,38 @@ piscineds=#
 
 ## Exercice 00
 
-
-
-----------------------------------------------------------------------------
-
-### Show me your DB
+### American apple Pie
 
 |                                   |
 | :-------------------------------- |
 | **Turn-in directory** :  *ex00/*  |
-| **Files to turn in**  :  *None*   |
-| **Allowed functions** :  *pgadmin, Postico, dbeaver or what you want to see the db easily*    |
+| **Files to turn in**  :  *pie.**   |
+| **Allowed functions** :  *All*    |
 
-- Trouver un moyen de *visualiser facilement la base de données* à l'aide d'un logiciel.
-- Le logiciel choisi doit vous permettre de trouver et de manipuler facilement les données en utilisant leur propre ID correspondant.
+> [pie.py](/data_analyst/ex00/pie.py)
+
+- Créez votre propre **diagramme circulaire** pour comprendre ce que les gens font sur le site..
+- Vous devez vous connecter à votre base de données data Warehouse du ***module 01***.
 
 ----------------------------------------------------------------------------
 
 ## Exercice 01
 
-----------------------------------------------------------------------------
-
-### First table
+### Initial data exploration
 
 |                                                   |
 | :------------------------------------------------ |
 | **Turn-in directory** :  *ex01/*                  |
-| **Files to turn in**  :  **customers_table.***    |
+| **Files to turn in**  :  **chart.***    |
 | **Allowed functions** :  *All*                    |
 
-> [customers_table.py](/data_warehouse/ex01/customers_table.py)
+> [chart.py](/data_analyst/ex01/chart.py)
 
-- Réunir toutes les tables `data_202*_***` dans une table appelée ***"customers"***.
+- Ne conservez que les données ***« purchase »*** de la colonne ***« event_type »***. Vous devez vous connecter à votre Data Warehouse du module 01.
+
+- Tous les prix sont en Dollars Altairiens, vous savez l'argent qui est dans votre portefeuille ?
+
+- Vous devez créer 3 graphiques du début du mois d'octobre 2022 à la fin du mois de février 2023.
 
 ----------------------------------------------------------------------------
 
