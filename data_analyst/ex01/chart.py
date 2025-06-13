@@ -10,6 +10,7 @@
 # Importations de fonctions externes
 import matplotlib.pyplot as plt
 import pandas as pd
+from datetime import datetime
 import psycopg2
 import sys
 
@@ -99,6 +100,25 @@ def graphiq_df(df: pd.DataFrame) -> None:
 
     print(df.head())
 
+    format_data = "%d/%m/%y %H:%M:%S.%f"
+
+
+
+    date = datetime.strptime("24/10/01 00:05:16.12", format_data)
+
+
+    labels = df["event_time"]
+    data = [value for value in labels.tolist() if value < date]
+
+    print("DATE: ", date)
+    print("\nDATA: ", data)
+
+    print("Event :", labels)
+    # print("Valeurs :", df_values)
+
+    
+    plt.plot(df["event_time"], df["price"])
+    plt.show()
 
 # ---------------------------------------------------------------- #
 def main() -> int:
