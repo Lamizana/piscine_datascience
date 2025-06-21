@@ -47,3 +47,26 @@ En effet, il ne sera pas possible de s'inscrire à un projet si le projet préc�
 > [!IMPORTANT]
 > Il est important de se référer à ce document pour accéder à vos projets.
 > Vous pouvez cliquer sur chaque module de cette page pour y accéder ou utiliser la liste des projets disponibles dans votre intra.
+
+Pour lancer ce projet il nous faut :
+
+- Un environnement virtuel pour les differents librairies python.
+- Un environnemet Docker pour ad;inistrer la base de donnees PostgreSQL.
+
+## Environnement
+
+Pour creer un envirennement python :
+
+```bash
+> python -m venv env            # Creer l'environnement
+> source env/bin/activate       # Le lance
+> deactivate                    # Le desactive
+```
+
+## Docker pour PostgreSQL
+
+Pour creer une base de donnees on va utiliser un docker pour avoir tous les droits administrateur.
+
+- creation d un fichier docker-compose.yml
+
+```bash
