@@ -239,10 +239,7 @@ def ventes_totales_par_mois(df: pd.DataFrame) -> None:
         print(f"\n❌ Erreur lors de l'affichage : {e}")
 
 
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-import pandas as pd
-
+# ---------------------------------------------------------------- #
 def plot_avg_customer_spending_altarien(df: pd.DataFrame) -> None:
     """
     Affiche un graphique en ligne des dépenses moyennes par client
@@ -315,13 +312,12 @@ def main() -> int:
 
     df_data = get_request(REQUEST_SQL, DB_CONFIG)
 
-    # df = df_sorted(df_data)
-    # graphiq_line(df)
+    df = df_sorted(df_data)
+    graphiq_line(df)
 
-    # ventes_totales_par_mois(df_data)
+    ventes_totales_par_mois(df_data)
+    
     plot_avg_customer_spending_altarien(df_data)
-
-
 
     print(color("\n\t-------------------------", 35, 1))
     print(color("\tFERMETURE DU PROGRAMME !!", 35, 1))
