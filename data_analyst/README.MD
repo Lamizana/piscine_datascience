@@ -9,13 +9,6 @@
 
 ### Sommaire
 
-- [Règles générales](#règles-générales)
-- [Introduction](#introduction)
-- [Exercice 00 : American apple Pie](#exercice-00)
-- [Exercice 01 : initial data exploration](#exercice-01)
-- [Exercice 02: Remove duplicates](#exercice-02)
-- [Exercice 03: Fusion](#exercice-03)
-
 ----------------------------------------------------------------------------
 
 ## Règles générales
@@ -75,6 +68,8 @@ piscineds=#
 
 ## Exercice 00
 
+----------------------------------------------------------------------------
+
 ### American apple Pie
 
 |                                   |
@@ -91,6 +86,8 @@ piscineds=#
 ----------------------------------------------------------------------------
 
 ## Exercice 01
+
+----------------------------------------------------------------------------
 
 ### Initial data exploration
 
@@ -114,47 +111,12 @@ piscineds=#
 
 ----------------------------------------------------------------------------
 
-### Remove duplicates
+### Initial data exploration
 
-|                                                     |
-| :------------------------------------------------   |
-| **Turn-in directory** :  *ex02/*                    |
-| **Files to turn in**  :  **remove_duplicates.***    |
-| **Allowed functions** :  *All*                      |
+|                                                   |
+| :------------------------------------------------ |
+| **Turn-in directory** :  *ex01/*                  |
+| **Files to turn in**  :  **chart.***    |
+| **Allowed functions** :  *All*                    |
 
-> [remove_duplicates.py](/data_warehouse/ex02/remove_duplicates.py)
-
-- Supprimer les lignes en double dans la table ***"customers"***.
-
-> [!WARNING]
-> Parfois, le serveur envoie la même instruction à 1 seconde d'intervalle.
-> Vous devez donc également les supprimer.
-
-```sql
-DELETE FROM customers
-WHERE ctid NOT IN (
-    SELECT MIN(ctid)
-    FROM customers
-    GROUP BY  event_time, event_type, product_id, price, user_id, user_session
-);
-```
-
-----------------------------------------------------------------------------
-
-## Exercice 03
-
-----------------------------------------------------------------------------
-
-### Fusion
-
-|                                                     |
-| :------------------------------------------------   |
-| **Turn-in directory** :  *ex03/*                    |
-| **Files to turn in**  :  **fusion.***               |
-| **Allowed functions** :  *All*                      |
-
-> [fusion.py](/data_warehouse/ex03/fusion.py)
-
-- Combiner les tables ***"customers"*** avec les ***"items"*** de la table ***"customers"***.
-
-Commandes :
+> [chart.py](/data_analyst/ex01/chart.py)

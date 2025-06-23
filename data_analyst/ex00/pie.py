@@ -9,10 +9,13 @@
 #                                       https://github.com/Lamizana #
 #####################################################################
 # Importations de fonctions externes
-import matplotlib.pyplot as plt
 import pandas as pd
 import psycopg2
 import sys
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
+
 
 #####################################################################
 ## VARIABLES GLOBALES

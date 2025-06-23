@@ -10,6 +10,7 @@
 import psycopg2
 from psycopg2 import errors, sql
 
+
 #####################################################################
 # Variables globales :
 # Configuration de la connexion à PostgreSQL :

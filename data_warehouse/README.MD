@@ -157,4 +157,3 @@ WHERE ctid NOT IN (
 
 - Combiner les tables ***"customers"*** avec les ***"items"*** de la table ***"customers"***.
 
-Commandes :
